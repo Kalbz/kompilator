@@ -26,10 +26,25 @@
 %left MULTOP DIVOP
 
 // definition of the production rules. All production rules are of type Node
-%type <Node *> root main_class expressions expression factor statement statement_list
+%type <Node *> root expression factor expressionList NonEmptyExpressionList
 
 %%
 root:       expression {root = $1;};
+
+
+expressionList: { $$ = new Node("EmptyExpressionList", "", yylineno); }
+              | NonEmptyExpressionList { $$ = $1; }
+              ;
+
+NonEmptyExpressionList: expression {
+                          $$ = new Node("ExpressionList", "", yylineno);
+                          $$->children.push_back($1);
+                        }
+                      | NonEmptyExpressionList "," expression {
+                          $$ = $1;
+                          $$->children.push_back($3);
+                        }
+                      ;
 
 expression: expression PLUSOP expression {      /*
                                                   Create a subtree that corresponds to the AddExpression
@@ -88,8 +103,51 @@ expression: expression PLUSOP expression {      /*
                             $$->children.push_back($1);
                             $$->children.push_back($2);
             }
-            | factor      {$$ = $1; /* printf("r4 ");*/}
+            | expression LB expression RB {
+                            $$ = new Node("ExpressionLBExpressionRB", "", yylineno);
+                            $$->children.push_back($1);
+                            $$->children.push_back($3);
+            }
+            | expression DOT LENGTH {
+                            $$ = new Node("ExpressionDotLength", "", yylineno);
+                            $$->children.push_back($1);
+            }
+
+            | expression DOT IDENTIFIER LP expressionList RP {
+                            $$ = new Node("MethodInvocation", "", yylineno);
+                            $$->children.push_back($1); 
+
+                            Node* identifierNode = new Node("Identifier", $3, yylineno); 
+                            $$->children.push_back(identifierNode); 
+
+                            $$->children.push_back($5); 
+            }
+            | INT {
+                            $$ = new Node("IntegerLiteral", "", yylineno);
+                            $$->children.push_back($1); 
+            }
+            | TRUE {
+                            $$ = new Node("TRUE", "", yylineno);
+                            $$->children.push_back($1); 
+            }
+            | FALSE {
+                            $$ = new Node("FALSE", "", yylineno);
+                            $$->children.push_back($1); 
+            }
+            | IDENTIFIER {
+                            $$ = new Node("IDENTIFIER", "", yylineno);
+                            $$->children.push_back($1); 
+            }
+            | THIS {
+                            $$ = new Node("THIS", "", yylineno);
+                            $$->children.push_back($1); 
+            }
+
+            | 
+            factor      {$$ = $1; /* printf("r4 ");*/}
             ;
+
+
 
 factor:     INT           {  $$ = new Node("Int", $1, yylineno); /* printf("r5 ");  Here we create a leaf node Int. The value of the leaf node is $1 */}
             | LP expression RP { $$ = $2; /* printf("r6 ");  simply return the expression */}

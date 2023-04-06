@@ -367,6 +367,8 @@ namespace yy {
     union union_type
     {
       // root
+      // expressionList
+      // NonEmptyExpressionList
       // expression
       // factor
       char dummy1[sizeof (Node *)];
@@ -594,9 +596,11 @@ namespace yy {
         // Type destructor.
 switch (yytype)
     {
-      case 48: // root
-      case 49: // expression
-      case 50: // factor
+      case 49: // root
+      case 50: // expressionList
+      case 51: // NonEmptyExpressionList
+      case 52: // expression
+      case 53: // factor
         value.template destroy< Node * > ();
         break;
 
@@ -720,13 +724,13 @@ switch (yytype)
       symbol_type (int tok)
         : super_type(token_type (tok))
       {
-        YY_ASSERT (tok == token::END);
+        YY_ASSERT (tok == token::END || tok == 302);
       }
 #else
       symbol_type (int tok)
         : super_type(token_type (tok))
       {
-        YY_ASSERT (tok == token::END);
+        YY_ASSERT (tok == token::END || tok == 302);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1493,7 +1497,7 @@ switch (yytype)
     // Tables.
     // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
     // STATE-NUM.
-    static const signed char yypact_[];
+    static const short yypact_[];
 
     // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
     // Performed when YYTABLE does not specify something else to do.  Zero
@@ -1532,7 +1536,7 @@ switch (yytype)
     static const char* const yytname_[];
 #if YYDEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const signed char yyrline_[];
+    static const unsigned char yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r);
     /// Print the state stack on the debug stream.
@@ -1759,10 +1763,10 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 78,     ///< Last index in yytable_.
-      yynnts_ = 4,  ///< Number of nonterminal symbols.
-      yyfinal_ = 7, ///< Termination state number.
-      yyntokens_ = 47  ///< Number of tokens.
+      yylast_ = 194,     ///< Last index in yytable_.
+      yynnts_ = 6,  ///< Number of nonterminal symbols.
+      yyfinal_ = 11, ///< Termination state number.
+      yyntokens_ = 48  ///< Number of tokens.
     };
 
 
@@ -1808,9 +1812,9 @@ switch (yytype)
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46
+      45,    46,    47
     };
-    const int user_token_number_max_ = 301;
+    const int user_token_number_max_ = 302;
 
     if (t <= 0)
       return yyeof_;
@@ -1829,9 +1833,11 @@ switch (yytype)
   {
     switch (this->type_get ())
     {
-      case 48: // root
-      case 49: // expression
-      case 50: // factor
+      case 49: // root
+      case 50: // expressionList
+      case 51: // NonEmptyExpressionList
+      case 52: // expression
+      case 53: // factor
         value.move< Node * > (std::move (that.value));
         break;
 
@@ -1896,9 +1902,11 @@ switch (yytype)
   {
     switch (this->type_get ())
     {
-      case 48: // root
-      case 49: // expression
-      case 50: // factor
+      case 49: // root
+      case 50: // expressionList
+      case 51: // NonEmptyExpressionList
+      case 52: // expression
+      case 53: // factor
         value.copy< Node * > (YY_MOVE (that.value));
         break;
 
@@ -1971,9 +1979,11 @@ switch (yytype)
     super_type::move (s);
     switch (this->type_get ())
     {
-      case 48: // root
-      case 49: // expression
-      case 50: // factor
+      case 49: // root
+      case 50: // expressionList
+      case 51: // NonEmptyExpressionList
+      case 52: // expression
+      case 53: // factor
         value.move< Node * > (YY_MOVE (s.value));
         break;
 
@@ -2078,7 +2088,7 @@ switch (yytype)
   }
 
 } // yy
-#line 2082 "parser.tab.hh"
+#line 2092 "parser.tab.hh"
 
 
 

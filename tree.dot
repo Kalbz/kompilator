@@ -1,0 +1,19 @@
+digraph {
+n0 [label="SubExpression:"];
+n1 [label="AddExpression:"];
+n2 [label="Int:10"];
+n1 -> n2
+n3 [label="DivExpression:"];
+n4 [label="MultExpression:"];
+n5 [label="Int:12"];
+n4 -> n5
+n6 [label="Int:18"];
+n4 -> n6
+n3 -> n4
+n7 [label="Int:10"];
+n3 -> n7
+n1 -> n3
+n0 -> n1
+n8 [label="Int:100"];
+n0 -> n8
+}
