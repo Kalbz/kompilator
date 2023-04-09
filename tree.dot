@@ -1,0 +1,29 @@
+digraph {
+n0 [label="Goal:"];
+n1 [label="NonEmptyMainClassList:"];
+n2 [label="MainClass:"];
+n3 [label="Identifier:QuickSort"];
+n2 -> n3
+n4 [label="Identifier:a"];
+n2 -> n4
+n5 [label="SystemOutPrintlnLPExpressionRP:"];
+n6 [label="MethodInvocation:"];
+n7 [label="NewIdentifierExpression:"];
+n8 [label="Identifier:QS"];
+n7 -> n8
+n6 -> n7
+n9 [label="Identifier:Start"];
+n6 -> n9
+n10 [label="EmptyExpressionList:"];
+n6 -> n10
+n5 -> n6
+n2 -> n5
+n1 -> n2
+n0 -> n1
+n11 [label="EmptyClassDeclarationList:"];
+n12 [label="ClassDeclaration:"];
+n11 -> n12
+n13 [label="ClassDeclarationList:"];
+n11 -> n13
+n0 -> n11
+}

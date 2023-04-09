@@ -1,0 +1,114 @@
+main_class: CLASS IDENTIFIER LCB PUBLIC STATIC VOID MAIN LP STRING_KEYWORD LB RB IDENTIFIER RP LCB statement_list RCB RCB
+            {
+                $$ = new Node("MainClass", "", yylineno);
+                Node* className = new Node("ClassName", $2, yylineno);
+                Node* mainMethodName = new Node("MainMethodName", $12, yylineno);
+
+                $$->children.push_back(className);
+                $$->children.push_back(mainMethodName);
+                $$->children.push_back($15);
+            }
+           ;
+
+
+
+    |       main_class {root = $1;}
+
+
+
+
+           LCB statement_list RCB
+              {
+                  $$ = new Node("Block", "", yylineno);
+                  $$->children = $2;
+              }
+            | 
+
+
+
+
+
+statement:
+              IF LP expression RP statement %prec IF
+              {
+                  $$ = new Node("IfStatement", "", yylineno);
+                  $$->children.push_back($3);
+                  $$->children.push_back($5);
+              }
+            | IF LP expression RP statement ELSE statement
+              {
+                  $$ = new Node("IfElseStatement", "", yylineno);
+                  $$->children.push_back($3);
+                  $$->children.push_back($5);
+                  $$->children.push_back($7);
+              }
+            | WHILE LP expression RP statement
+              {
+                  $$ = new Node("WhileStatement", "", yylineno);
+                  $$->children.push_back($3);
+                  $$->children.push_back($5);
+              }
+            | IDENTIFIER ASSIGNOP expression SEMICOLON
+              {
+                  $$ = new Node("Assignment", "", yylineno);
+                  $$->children.push_back(new Node("Identifier", $1, yylineno));
+                  $$->children.push_back($3);
+              }
+            | IDENTIFIER LB expression RB ASSIGNOP expression SEMICOLON
+              {
+                  $$ = new Node("ArrayAssignment", "", yylineno);
+                  $$->children.push_back(new Node("Identifier", $1, yylineno));
+                  $$->children.push_back($3);
+                  $$->children.push_back($6);
+              }
+            | PRINTLN LP expression RP SEMICOLON
+              {
+                  $$ = new Node("PrintStatement", "", yylineno);
+                  $$->children.push_back($3);
+              }
+            ;
+
+
+
+
+
+
+
+statement: LCB statementList RCB {
+                            $$ = new Node("LCBStatementListRCB", "", yylineno);
+                            $$->children.push_back($2);
+            }
+            
+statementList: statement {
+                            $$ = new Node("Statement", "", yylineno);
+                            $$->children.push_back($1);
+            }
+            | statementList statement {
+                            $$ = new Node("StatementList", "", yylineno);
+                            $$->children.push_back($1);
+                            $$->children.push_back($2);
+            }
+            ;
+
+
+
+
+
+            MethodDeclaration: PUBLIC Type IDENTIFIER LP ParameterList RP LCB VarDeclarationList statementList RETURN expression SEMICOLON RCB {
+                            $$ = new Node("MethodDeclaration", "", yylineno);
+                            $$->children.push_back(new Node("Identifier", $3, yylineno));
+            }
+            ;
+
+
+
+
+            MethodDeclaration: PUBLIC Type IDENTIFIER LP ParameterList RP LCB VarDeclarationList statementList RETURN expression SEMICOLON RCB {
+                            $$ = new Node("MethodDeclaration", "", yylineno);
+                            $$->children.push_back(new Node("Identifier", $3, yylineno));
+            }
+            | PUBLIC Type IDENTIFIER LP Type IDENTIFIER ParameterList LCB VarDeclarationList statementList RETURN expression SEMICOLON RCB {
+                            $$ = new Node("MethodDeclaration", "", yylineno);
+                            $$->children.push_back(new Node("Identifier", $3, yylineno));
+            }
+            ;
