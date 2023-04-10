@@ -5,7 +5,6 @@ extern Node* root;
 extern FILE* yyin;
 extern int yylineno;
 extern int lexical_errors;
-extern yy::parser::symbol_type yylex();
 
 void yy::parser::error(std::string const&err)
 { 
@@ -22,11 +21,8 @@ int main(int argc, char **argv)
       return 1;
     }
   }
-  //
-  if(USE_LEX_ONLY) 
-    yylex();
-  else {
-    yy::parser parser;
+
+  yy::parser parser;
 
   if(!parser.parse() && !lexical_errors) {
 
@@ -35,8 +31,8 @@ int main(int argc, char **argv)
     printf("\nPrint Tree:  \n");
     root->print_tree();
     root->generate_tree();
+    root->printPreorder();
   }
-    }
   
   return 0;
 }

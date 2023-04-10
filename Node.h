@@ -7,6 +7,8 @@
 #include <vector>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <memory>
+#include "SemanticAnalysis.hpp"
 
 using namespace std;
 
@@ -16,7 +18,7 @@ public:
 	int id, lineno;
 	string type, value;
 	list<Node*> children;
-	Node(string t, string v, int l) : type(t), value(v), lineno(l){}
+	Node(string t, string v, int l) : type(t), value(v), lineno(l) {}
 	Node()
 	{
 		type = "uninitialised";
@@ -25,7 +27,7 @@ public:
 	void print_tree(int depth=0) {
 		for(int i=0; i<depth; i++)
 		cout << "  ";
-		cout << type << ":" << value << endl; //<< " @line: "<< lineno << endl;
+		cout << type << ":" << value << endl;
 		for(auto i=children.begin(); i!=children.end(); i++)
 		(*i)->print_tree(depth+1);
 	}
@@ -53,6 +55,21 @@ public:
 		  (*i)->generate_tree_content(count, outStream);
 		  *outStream << "n" << id << " -> n" << (*i)->id << endl;
 	  }
+  }
+
+
+  void printPreorder() {
+	
+	SymbolTable symbolTable;
+
+	if (type == "Identifier"){
+        std::unique_ptr<Record> variableRecord(new VariableRecord(value, children.front()->value));
+        symbolTable.insert(std::move(variableRecord));
+	}
+	symbolTable.print();
+	cout << type << ":" << value << endl;
+	for(auto i=children.begin(); i!=children.end(); i++)
+	  (*i)->printPreorder();
   }
 
 };
