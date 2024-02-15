@@ -63,4 +63,19 @@ public:
     }
 };
 
+class VariableDeclarationNode : public Node {
+public:
+    VariableDeclarationNode(string t, string v, int l) : Node(t, v, l) {}
+
+    virtual bool checkSemantics(SymbolTable& symbolTable) override {
+        // Example check: Ensure the variable is not already declared in the current scope
+        if (symbolTable.lookupCurrentScope(value)) {
+            cout << "Semantic Error: Variable '" << value << "' already declared in the current scope." << endl;
+            return false;
+        }
+        return true; // If no semantic errors, return true
+    }
+};
+
+
 #endif // NODE_H
