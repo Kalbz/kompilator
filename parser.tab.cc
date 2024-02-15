@@ -1,8 +1,8 @@
-// A Bison parser, made by GNU Bison 3.8.2.
+// A Bison parser, made by GNU Bison 3.5.1.
 
 // Skeleton implementation for Bison LALR(1) parsers in C++
 
-// Copyright (C) 2002-2015, 2018-2021 Free Software Foundation, Inc.
+// Copyright (C) 2002-2015, 2018-2020 Free Software Foundation, Inc.
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // As a special exception, you may create a larger work that contains
 // part or all of the Bison parser skeleton and distribute that work
@@ -30,9 +30,8 @@
 // This special exception was added by the Free Software Foundation in
 // version 2.2 of Bison.
 
-// DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-// especially those whose name start with YY_ or yy_.  They are
-// private implementation details that can be changed or removed.
+// Undocumented macros, especially those whose name start with YY_,
+// are private implementation details.  Do not rely on them.
 
 
 
@@ -51,7 +50,7 @@
   extern int yylineno;
   
 
-#line 55 "parser.tab.cc"
+#line 54 "parser.tab.cc"
 
 
 #ifndef YY_
@@ -65,7 +64,6 @@
 #  define YY_(msgid) msgid
 # endif
 #endif
-
 
 // Whether we are compiled with exception support.
 #ifndef YY_EXCEPTIONS
@@ -103,13 +101,13 @@
 # define YY_STACK_PRINT()               \
   do {                                  \
     if (yydebug_)                       \
-      yy_stack_print_ ();                \
+      yystack_print_ ();                \
   } while (false)
 
 #else // !YYDEBUG
 
 # define YYCDEBUG if (false) std::cerr
-# define YY_SYMBOL_PRINT(Title, Symbol)  YY_USE (Symbol)
+# define YY_SYMBOL_PRINT(Title, Symbol)  YYUSE (Symbol)
 # define YY_REDUCE_PRINT(Rule)           static_cast<void> (0)
 # define YY_STACK_PRINT()                static_cast<void> (0)
 
@@ -124,7 +122,49 @@
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 128 "parser.tab.cc"
+#line 126 "parser.tab.cc"
+
+
+  /* Return YYSTR after stripping away unnecessary quotes and
+     backslashes, so that it's suitable for yyerror.  The heuristic is
+     that double-quoting is unnecessary unless the string contains an
+     apostrophe, a comma, or backslash (other than backslash-backslash).
+     YYSTR is taken from yytname.  */
+  std::string
+  parser::yytnamerr_ (const char *yystr)
+  {
+    if (*yystr == '"')
+      {
+        std::string yyr;
+        char const *yyp = yystr;
+
+        for (;;)
+          switch (*++yyp)
+            {
+            case '\'':
+            case ',':
+              goto do_not_strip_quotes;
+
+            case '\\':
+              if (*++yyp != '\\')
+                goto do_not_strip_quotes;
+              else
+                goto append;
+
+            append:
+            default:
+              yyr += *yyp;
+              break;
+
+            case '"':
+              return yyr;
+            }
+      do_not_strip_quotes: ;
+      }
+
+    return yystr;
+  }
+
 
   /// Build a parser object.
   parser::parser ()
@@ -142,9 +182,9 @@ namespace yy {
   parser::syntax_error::~syntax_error () YY_NOEXCEPT YY_NOTHROW
   {}
 
-  /*---------.
-  | symbol.  |
-  `---------*/
+  /*---------------.
+  | Symbol types.  |
+  `---------------*/
 
 
 
@@ -174,13 +214,13 @@ namespace yy {
     : state (s)
   {}
 
-  parser::symbol_kind_type
-  parser::by_state::kind () const YY_NOEXCEPT
+  parser::symbol_number_type
+  parser::by_state::type_get () const YY_NOEXCEPT
   {
     if (state == empty_state)
-      return symbol_kind::S_YYEMPTY;
+      return empty_symbol;
     else
-      return YY_CAST (symbol_kind_type, yystos_[+state]);
+      return yystos_[+state];
   }
 
   parser::stack_symbol_type::stack_symbol_type ()
@@ -189,86 +229,86 @@ namespace yy {
   parser::stack_symbol_type::stack_symbol_type (YY_RVREF (stack_symbol_type) that)
     : super_type (YY_MOVE (that.state))
   {
-    switch (that.kind ())
+    switch (that.type_get ())
     {
-      case symbol_kind::S_root: // root
-      case symbol_kind::S_Goal: // Goal
-      case symbol_kind::S_ClassDeclarationList: // ClassDeclarationList
-      case symbol_kind::S_MainClass: // MainClass
-      case symbol_kind::S_Methods: // Methods
-      case symbol_kind::S_main: // main
-      case symbol_kind::S_void: // void
-      case symbol_kind::S_MainBody: // MainBody
-      case symbol_kind::S_Arg: // Arg
-      case symbol_kind::S_ClassDeclaration: // ClassDeclaration
-      case symbol_kind::S_VarDeclarationList: // VarDeclarationList
-      case symbol_kind::S_MethodDeclarationList: // MethodDeclarationList
-      case symbol_kind::S_VarDeclaration: // VarDeclaration
-      case symbol_kind::S_MethodDeclaration: // MethodDeclaration
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_Parameter: // Parameter
-      case symbol_kind::S_body: // body
-      case symbol_kind::S_return: // return
-      case symbol_kind::S_StatementVars: // StatementVars
-      case symbol_kind::S_vs: // vs
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_statement: // statement
-      case symbol_kind::S_IfStatement: // IfStatement
-      case symbol_kind::S_ElseStatement: // ElseStatement
-      case symbol_kind::S_StatementList: // StatementList
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_ExtendedFunc: // ExtendedFunc
-      case symbol_kind::S_Index: // Index
-      case symbol_kind::S_Argumentlist: // Argumentlist
-      case symbol_kind::S_factor: // factor
-      case symbol_kind::S_identifier: // identifier
+      case 49: // root
+      case 50: // Goal
+      case 51: // ClassDeclarationList
+      case 52: // MainClass
+      case 53: // Methods
+      case 54: // main
+      case 55: // void
+      case 56: // MainBody
+      case 57: // Arg
+      case 58: // ClassDeclaration
+      case 59: // VarDeclarationList
+      case 60: // MethodDeclarationList
+      case 61: // VarDeclaration
+      case 62: // MethodDeclaration
+      case 63: // ParameterList
+      case 64: // Parameter
+      case 65: // body
+      case 66: // return
+      case 67: // StatementVars
+      case 68: // vs
+      case 69: // type
+      case 70: // statement
+      case 71: // IfStatement
+      case 72: // ElseStatement
+      case 73: // StatementList
+      case 74: // expression
+      case 75: // ExtendedFunc
+      case 76: // Index
+      case 77: // Argumentlist
+      case 78: // factor
+      case 79: // identifier
         value.YY_MOVE_OR_COPY< Node * > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_PLUSOP: // PLUSOP
-      case symbol_kind::S_MINUSOP: // MINUSOP
-      case symbol_kind::S_MULTOP: // MULTOP
-      case symbol_kind::S_INT: // INT
-      case symbol_kind::S_LP: // LP
-      case symbol_kind::S_RP: // RP
-      case symbol_kind::S_CLASS: // CLASS
-      case symbol_kind::S_EXTENDS: // EXTENDS
-      case symbol_kind::S_PUBLIC: // PUBLIC
-      case symbol_kind::S_STATIC: // STATIC
-      case symbol_kind::S_VOID: // VOID
-      case symbol_kind::S_INT_KEYWORD: // INT_KEYWORD
-      case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_IF: // IF
-      case symbol_kind::S_ELSE: // ELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_RETURN: // RETURN
-      case symbol_kind::S_TRUE: // TRUE
-      case symbol_kind::S_FALSE: // FALSE
-      case symbol_kind::S_THIS: // THIS
-      case symbol_kind::S_NEW: // NEW
-      case symbol_kind::S_LENGTH: // LENGTH
-      case symbol_kind::S_PRINTLN: // PRINTLN
-      case symbol_kind::S_STRINGLITERAL: // STRINGLITERAL
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_LCB: // LCB
-      case symbol_kind::S_RCB: // RCB
-      case symbol_kind::S_LB: // LB
-      case symbol_kind::S_RB: // RB
-      case symbol_kind::S_ASSIGNOP: // ASSIGNOP
-      case symbol_kind::S_SEMICOLON: // SEMICOLON
-      case symbol_kind::S_COMMA: // COMMA
-      case symbol_kind::S_DOT: // DOT
-      case symbol_kind::S_ANDOP: // ANDOP
-      case symbol_kind::S_EQOP: // EQOP
-      case symbol_kind::S_NEOP: // NEOP
-      case symbol_kind::S_OROP: // OROP
-      case symbol_kind::S_DIVOP: // DIVOP
-      case symbol_kind::S_MODOP: // MODOP
-      case symbol_kind::S_NOTOP: // NOTOP
-      case symbol_kind::S_LCHEV: // LCHEV
-      case symbol_kind::S_RCHEV: // RCHEV
-      case symbol_kind::S_STRING_KEYWORD: // STRING_KEYWORD
-      case symbol_kind::S_MAIN: // MAIN
+      case 3: // PLUSOP
+      case 4: // MINUSOP
+      case 5: // MULTOP
+      case 6: // INT
+      case 7: // LP
+      case 8: // RP
+      case 9: // CLASS
+      case 10: // EXTENDS
+      case 11: // PUBLIC
+      case 12: // STATIC
+      case 13: // VOID
+      case 14: // INT_KEYWORD
+      case 15: // BOOLEAN
+      case 16: // IF
+      case 17: // ELSE
+      case 18: // WHILE
+      case 19: // RETURN
+      case 20: // TRUE
+      case 21: // FALSE
+      case 22: // THIS
+      case 23: // NEW
+      case 24: // LENGTH
+      case 25: // PRINTLN
+      case 26: // STRINGLITERAL
+      case 27: // IDENTIFIER
+      case 28: // LCB
+      case 29: // RCB
+      case 30: // LB
+      case 31: // RB
+      case 32: // ASSIGNOP
+      case 33: // SEMICOLON
+      case 34: // COMMA
+      case 35: // DOT
+      case 36: // ANDOP
+      case 37: // EQOP
+      case 38: // NEOP
+      case 39: // OROP
+      case 40: // DIVOP
+      case 41: // MODOP
+      case 42: // NOTOP
+      case 43: // LCHEV
+      case 44: // RCHEV
+      case 45: // STRING_KEYWORD
+      case 46: // MAIN
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -285,86 +325,86 @@ namespace yy {
   parser::stack_symbol_type::stack_symbol_type (state_type s, YY_MOVE_REF (symbol_type) that)
     : super_type (s)
   {
-    switch (that.kind ())
+    switch (that.type_get ())
     {
-      case symbol_kind::S_root: // root
-      case symbol_kind::S_Goal: // Goal
-      case symbol_kind::S_ClassDeclarationList: // ClassDeclarationList
-      case symbol_kind::S_MainClass: // MainClass
-      case symbol_kind::S_Methods: // Methods
-      case symbol_kind::S_main: // main
-      case symbol_kind::S_void: // void
-      case symbol_kind::S_MainBody: // MainBody
-      case symbol_kind::S_Arg: // Arg
-      case symbol_kind::S_ClassDeclaration: // ClassDeclaration
-      case symbol_kind::S_VarDeclarationList: // VarDeclarationList
-      case symbol_kind::S_MethodDeclarationList: // MethodDeclarationList
-      case symbol_kind::S_VarDeclaration: // VarDeclaration
-      case symbol_kind::S_MethodDeclaration: // MethodDeclaration
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_Parameter: // Parameter
-      case symbol_kind::S_body: // body
-      case symbol_kind::S_return: // return
-      case symbol_kind::S_StatementVars: // StatementVars
-      case symbol_kind::S_vs: // vs
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_statement: // statement
-      case symbol_kind::S_IfStatement: // IfStatement
-      case symbol_kind::S_ElseStatement: // ElseStatement
-      case symbol_kind::S_StatementList: // StatementList
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_ExtendedFunc: // ExtendedFunc
-      case symbol_kind::S_Index: // Index
-      case symbol_kind::S_Argumentlist: // Argumentlist
-      case symbol_kind::S_factor: // factor
-      case symbol_kind::S_identifier: // identifier
+      case 49: // root
+      case 50: // Goal
+      case 51: // ClassDeclarationList
+      case 52: // MainClass
+      case 53: // Methods
+      case 54: // main
+      case 55: // void
+      case 56: // MainBody
+      case 57: // Arg
+      case 58: // ClassDeclaration
+      case 59: // VarDeclarationList
+      case 60: // MethodDeclarationList
+      case 61: // VarDeclaration
+      case 62: // MethodDeclaration
+      case 63: // ParameterList
+      case 64: // Parameter
+      case 65: // body
+      case 66: // return
+      case 67: // StatementVars
+      case 68: // vs
+      case 69: // type
+      case 70: // statement
+      case 71: // IfStatement
+      case 72: // ElseStatement
+      case 73: // StatementList
+      case 74: // expression
+      case 75: // ExtendedFunc
+      case 76: // Index
+      case 77: // Argumentlist
+      case 78: // factor
+      case 79: // identifier
         value.move< Node * > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_PLUSOP: // PLUSOP
-      case symbol_kind::S_MINUSOP: // MINUSOP
-      case symbol_kind::S_MULTOP: // MULTOP
-      case symbol_kind::S_INT: // INT
-      case symbol_kind::S_LP: // LP
-      case symbol_kind::S_RP: // RP
-      case symbol_kind::S_CLASS: // CLASS
-      case symbol_kind::S_EXTENDS: // EXTENDS
-      case symbol_kind::S_PUBLIC: // PUBLIC
-      case symbol_kind::S_STATIC: // STATIC
-      case symbol_kind::S_VOID: // VOID
-      case symbol_kind::S_INT_KEYWORD: // INT_KEYWORD
-      case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_IF: // IF
-      case symbol_kind::S_ELSE: // ELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_RETURN: // RETURN
-      case symbol_kind::S_TRUE: // TRUE
-      case symbol_kind::S_FALSE: // FALSE
-      case symbol_kind::S_THIS: // THIS
-      case symbol_kind::S_NEW: // NEW
-      case symbol_kind::S_LENGTH: // LENGTH
-      case symbol_kind::S_PRINTLN: // PRINTLN
-      case symbol_kind::S_STRINGLITERAL: // STRINGLITERAL
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_LCB: // LCB
-      case symbol_kind::S_RCB: // RCB
-      case symbol_kind::S_LB: // LB
-      case symbol_kind::S_RB: // RB
-      case symbol_kind::S_ASSIGNOP: // ASSIGNOP
-      case symbol_kind::S_SEMICOLON: // SEMICOLON
-      case symbol_kind::S_COMMA: // COMMA
-      case symbol_kind::S_DOT: // DOT
-      case symbol_kind::S_ANDOP: // ANDOP
-      case symbol_kind::S_EQOP: // EQOP
-      case symbol_kind::S_NEOP: // NEOP
-      case symbol_kind::S_OROP: // OROP
-      case symbol_kind::S_DIVOP: // DIVOP
-      case symbol_kind::S_MODOP: // MODOP
-      case symbol_kind::S_NOTOP: // NOTOP
-      case symbol_kind::S_LCHEV: // LCHEV
-      case symbol_kind::S_RCHEV: // RCHEV
-      case symbol_kind::S_STRING_KEYWORD: // STRING_KEYWORD
-      case symbol_kind::S_MAIN: // MAIN
+      case 3: // PLUSOP
+      case 4: // MINUSOP
+      case 5: // MULTOP
+      case 6: // INT
+      case 7: // LP
+      case 8: // RP
+      case 9: // CLASS
+      case 10: // EXTENDS
+      case 11: // PUBLIC
+      case 12: // STATIC
+      case 13: // VOID
+      case 14: // INT_KEYWORD
+      case 15: // BOOLEAN
+      case 16: // IF
+      case 17: // ELSE
+      case 18: // WHILE
+      case 19: // RETURN
+      case 20: // TRUE
+      case 21: // FALSE
+      case 22: // THIS
+      case 23: // NEW
+      case 24: // LENGTH
+      case 25: // PRINTLN
+      case 26: // STRINGLITERAL
+      case 27: // IDENTIFIER
+      case 28: // LCB
+      case 29: // RCB
+      case 30: // LB
+      case 31: // RB
+      case 32: // ASSIGNOP
+      case 33: // SEMICOLON
+      case 34: // COMMA
+      case 35: // DOT
+      case 36: // ANDOP
+      case 37: // EQOP
+      case 38: // NEOP
+      case 39: // OROP
+      case 40: // DIVOP
+      case 41: // MODOP
+      case 42: // NOTOP
+      case 43: // LCHEV
+      case 44: // RCHEV
+      case 45: // STRING_KEYWORD
+      case 46: // MAIN
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -373,7 +413,7 @@ namespace yy {
     }
 
     // that is emptied.
-    that.kind_ = symbol_kind::S_YYEMPTY;
+    that.type = empty_symbol;
   }
 
 #if YY_CPLUSPLUS < 201103L
@@ -381,86 +421,86 @@ namespace yy {
   parser::stack_symbol_type::operator= (const stack_symbol_type& that)
   {
     state = that.state;
-    switch (that.kind ())
+    switch (that.type_get ())
     {
-      case symbol_kind::S_root: // root
-      case symbol_kind::S_Goal: // Goal
-      case symbol_kind::S_ClassDeclarationList: // ClassDeclarationList
-      case symbol_kind::S_MainClass: // MainClass
-      case symbol_kind::S_Methods: // Methods
-      case symbol_kind::S_main: // main
-      case symbol_kind::S_void: // void
-      case symbol_kind::S_MainBody: // MainBody
-      case symbol_kind::S_Arg: // Arg
-      case symbol_kind::S_ClassDeclaration: // ClassDeclaration
-      case symbol_kind::S_VarDeclarationList: // VarDeclarationList
-      case symbol_kind::S_MethodDeclarationList: // MethodDeclarationList
-      case symbol_kind::S_VarDeclaration: // VarDeclaration
-      case symbol_kind::S_MethodDeclaration: // MethodDeclaration
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_Parameter: // Parameter
-      case symbol_kind::S_body: // body
-      case symbol_kind::S_return: // return
-      case symbol_kind::S_StatementVars: // StatementVars
-      case symbol_kind::S_vs: // vs
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_statement: // statement
-      case symbol_kind::S_IfStatement: // IfStatement
-      case symbol_kind::S_ElseStatement: // ElseStatement
-      case symbol_kind::S_StatementList: // StatementList
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_ExtendedFunc: // ExtendedFunc
-      case symbol_kind::S_Index: // Index
-      case symbol_kind::S_Argumentlist: // Argumentlist
-      case symbol_kind::S_factor: // factor
-      case symbol_kind::S_identifier: // identifier
+      case 49: // root
+      case 50: // Goal
+      case 51: // ClassDeclarationList
+      case 52: // MainClass
+      case 53: // Methods
+      case 54: // main
+      case 55: // void
+      case 56: // MainBody
+      case 57: // Arg
+      case 58: // ClassDeclaration
+      case 59: // VarDeclarationList
+      case 60: // MethodDeclarationList
+      case 61: // VarDeclaration
+      case 62: // MethodDeclaration
+      case 63: // ParameterList
+      case 64: // Parameter
+      case 65: // body
+      case 66: // return
+      case 67: // StatementVars
+      case 68: // vs
+      case 69: // type
+      case 70: // statement
+      case 71: // IfStatement
+      case 72: // ElseStatement
+      case 73: // StatementList
+      case 74: // expression
+      case 75: // ExtendedFunc
+      case 76: // Index
+      case 77: // Argumentlist
+      case 78: // factor
+      case 79: // identifier
         value.copy< Node * > (that.value);
         break;
 
-      case symbol_kind::S_PLUSOP: // PLUSOP
-      case symbol_kind::S_MINUSOP: // MINUSOP
-      case symbol_kind::S_MULTOP: // MULTOP
-      case symbol_kind::S_INT: // INT
-      case symbol_kind::S_LP: // LP
-      case symbol_kind::S_RP: // RP
-      case symbol_kind::S_CLASS: // CLASS
-      case symbol_kind::S_EXTENDS: // EXTENDS
-      case symbol_kind::S_PUBLIC: // PUBLIC
-      case symbol_kind::S_STATIC: // STATIC
-      case symbol_kind::S_VOID: // VOID
-      case symbol_kind::S_INT_KEYWORD: // INT_KEYWORD
-      case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_IF: // IF
-      case symbol_kind::S_ELSE: // ELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_RETURN: // RETURN
-      case symbol_kind::S_TRUE: // TRUE
-      case symbol_kind::S_FALSE: // FALSE
-      case symbol_kind::S_THIS: // THIS
-      case symbol_kind::S_NEW: // NEW
-      case symbol_kind::S_LENGTH: // LENGTH
-      case symbol_kind::S_PRINTLN: // PRINTLN
-      case symbol_kind::S_STRINGLITERAL: // STRINGLITERAL
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_LCB: // LCB
-      case symbol_kind::S_RCB: // RCB
-      case symbol_kind::S_LB: // LB
-      case symbol_kind::S_RB: // RB
-      case symbol_kind::S_ASSIGNOP: // ASSIGNOP
-      case symbol_kind::S_SEMICOLON: // SEMICOLON
-      case symbol_kind::S_COMMA: // COMMA
-      case symbol_kind::S_DOT: // DOT
-      case symbol_kind::S_ANDOP: // ANDOP
-      case symbol_kind::S_EQOP: // EQOP
-      case symbol_kind::S_NEOP: // NEOP
-      case symbol_kind::S_OROP: // OROP
-      case symbol_kind::S_DIVOP: // DIVOP
-      case symbol_kind::S_MODOP: // MODOP
-      case symbol_kind::S_NOTOP: // NOTOP
-      case symbol_kind::S_LCHEV: // LCHEV
-      case symbol_kind::S_RCHEV: // RCHEV
-      case symbol_kind::S_STRING_KEYWORD: // STRING_KEYWORD
-      case symbol_kind::S_MAIN: // MAIN
+      case 3: // PLUSOP
+      case 4: // MINUSOP
+      case 5: // MULTOP
+      case 6: // INT
+      case 7: // LP
+      case 8: // RP
+      case 9: // CLASS
+      case 10: // EXTENDS
+      case 11: // PUBLIC
+      case 12: // STATIC
+      case 13: // VOID
+      case 14: // INT_KEYWORD
+      case 15: // BOOLEAN
+      case 16: // IF
+      case 17: // ELSE
+      case 18: // WHILE
+      case 19: // RETURN
+      case 20: // TRUE
+      case 21: // FALSE
+      case 22: // THIS
+      case 23: // NEW
+      case 24: // LENGTH
+      case 25: // PRINTLN
+      case 26: // STRINGLITERAL
+      case 27: // IDENTIFIER
+      case 28: // LCB
+      case 29: // RCB
+      case 30: // LB
+      case 31: // RB
+      case 32: // ASSIGNOP
+      case 33: // SEMICOLON
+      case 34: // COMMA
+      case 35: // DOT
+      case 36: // ANDOP
+      case 37: // EQOP
+      case 38: // NEOP
+      case 39: // OROP
+      case 40: // DIVOP
+      case 41: // MODOP
+      case 42: // NOTOP
+      case 43: // LCHEV
+      case 44: // RCHEV
+      case 45: // STRING_KEYWORD
+      case 46: // MAIN
         value.copy< std::string > (that.value);
         break;
 
@@ -475,86 +515,86 @@ namespace yy {
   parser::stack_symbol_type::operator= (stack_symbol_type& that)
   {
     state = that.state;
-    switch (that.kind ())
+    switch (that.type_get ())
     {
-      case symbol_kind::S_root: // root
-      case symbol_kind::S_Goal: // Goal
-      case symbol_kind::S_ClassDeclarationList: // ClassDeclarationList
-      case symbol_kind::S_MainClass: // MainClass
-      case symbol_kind::S_Methods: // Methods
-      case symbol_kind::S_main: // main
-      case symbol_kind::S_void: // void
-      case symbol_kind::S_MainBody: // MainBody
-      case symbol_kind::S_Arg: // Arg
-      case symbol_kind::S_ClassDeclaration: // ClassDeclaration
-      case symbol_kind::S_VarDeclarationList: // VarDeclarationList
-      case symbol_kind::S_MethodDeclarationList: // MethodDeclarationList
-      case symbol_kind::S_VarDeclaration: // VarDeclaration
-      case symbol_kind::S_MethodDeclaration: // MethodDeclaration
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_Parameter: // Parameter
-      case symbol_kind::S_body: // body
-      case symbol_kind::S_return: // return
-      case symbol_kind::S_StatementVars: // StatementVars
-      case symbol_kind::S_vs: // vs
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_statement: // statement
-      case symbol_kind::S_IfStatement: // IfStatement
-      case symbol_kind::S_ElseStatement: // ElseStatement
-      case symbol_kind::S_StatementList: // StatementList
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_ExtendedFunc: // ExtendedFunc
-      case symbol_kind::S_Index: // Index
-      case symbol_kind::S_Argumentlist: // Argumentlist
-      case symbol_kind::S_factor: // factor
-      case symbol_kind::S_identifier: // identifier
+      case 49: // root
+      case 50: // Goal
+      case 51: // ClassDeclarationList
+      case 52: // MainClass
+      case 53: // Methods
+      case 54: // main
+      case 55: // void
+      case 56: // MainBody
+      case 57: // Arg
+      case 58: // ClassDeclaration
+      case 59: // VarDeclarationList
+      case 60: // MethodDeclarationList
+      case 61: // VarDeclaration
+      case 62: // MethodDeclaration
+      case 63: // ParameterList
+      case 64: // Parameter
+      case 65: // body
+      case 66: // return
+      case 67: // StatementVars
+      case 68: // vs
+      case 69: // type
+      case 70: // statement
+      case 71: // IfStatement
+      case 72: // ElseStatement
+      case 73: // StatementList
+      case 74: // expression
+      case 75: // ExtendedFunc
+      case 76: // Index
+      case 77: // Argumentlist
+      case 78: // factor
+      case 79: // identifier
         value.move< Node * > (that.value);
         break;
 
-      case symbol_kind::S_PLUSOP: // PLUSOP
-      case symbol_kind::S_MINUSOP: // MINUSOP
-      case symbol_kind::S_MULTOP: // MULTOP
-      case symbol_kind::S_INT: // INT
-      case symbol_kind::S_LP: // LP
-      case symbol_kind::S_RP: // RP
-      case symbol_kind::S_CLASS: // CLASS
-      case symbol_kind::S_EXTENDS: // EXTENDS
-      case symbol_kind::S_PUBLIC: // PUBLIC
-      case symbol_kind::S_STATIC: // STATIC
-      case symbol_kind::S_VOID: // VOID
-      case symbol_kind::S_INT_KEYWORD: // INT_KEYWORD
-      case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_IF: // IF
-      case symbol_kind::S_ELSE: // ELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_RETURN: // RETURN
-      case symbol_kind::S_TRUE: // TRUE
-      case symbol_kind::S_FALSE: // FALSE
-      case symbol_kind::S_THIS: // THIS
-      case symbol_kind::S_NEW: // NEW
-      case symbol_kind::S_LENGTH: // LENGTH
-      case symbol_kind::S_PRINTLN: // PRINTLN
-      case symbol_kind::S_STRINGLITERAL: // STRINGLITERAL
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_LCB: // LCB
-      case symbol_kind::S_RCB: // RCB
-      case symbol_kind::S_LB: // LB
-      case symbol_kind::S_RB: // RB
-      case symbol_kind::S_ASSIGNOP: // ASSIGNOP
-      case symbol_kind::S_SEMICOLON: // SEMICOLON
-      case symbol_kind::S_COMMA: // COMMA
-      case symbol_kind::S_DOT: // DOT
-      case symbol_kind::S_ANDOP: // ANDOP
-      case symbol_kind::S_EQOP: // EQOP
-      case symbol_kind::S_NEOP: // NEOP
-      case symbol_kind::S_OROP: // OROP
-      case symbol_kind::S_DIVOP: // DIVOP
-      case symbol_kind::S_MODOP: // MODOP
-      case symbol_kind::S_NOTOP: // NOTOP
-      case symbol_kind::S_LCHEV: // LCHEV
-      case symbol_kind::S_RCHEV: // RCHEV
-      case symbol_kind::S_STRING_KEYWORD: // STRING_KEYWORD
-      case symbol_kind::S_MAIN: // MAIN
+      case 3: // PLUSOP
+      case 4: // MINUSOP
+      case 5: // MULTOP
+      case 6: // INT
+      case 7: // LP
+      case 8: // RP
+      case 9: // CLASS
+      case 10: // EXTENDS
+      case 11: // PUBLIC
+      case 12: // STATIC
+      case 13: // VOID
+      case 14: // INT_KEYWORD
+      case 15: // BOOLEAN
+      case 16: // IF
+      case 17: // ELSE
+      case 18: // WHILE
+      case 19: // RETURN
+      case 20: // TRUE
+      case 21: // FALSE
+      case 22: // THIS
+      case 23: // NEW
+      case 24: // LENGTH
+      case 25: // PRINTLN
+      case 26: // STRINGLITERAL
+      case 27: // IDENTIFIER
+      case 28: // LCB
+      case 29: // RCB
+      case 30: // LB
+      case 31: // RB
+      case 32: // ASSIGNOP
+      case 33: // SEMICOLON
+      case 34: // COMMA
+      case 35: // DOT
+      case 36: // ANDOP
+      case 37: // EQOP
+      case 38: // NEOP
+      case 39: // OROP
+      case 40: // DIVOP
+      case 41: // MODOP
+      case 42: // NOTOP
+      case 43: // LCHEV
+      case 44: // RCHEV
+      case 45: // STRING_KEYWORD
+      case 46: // MAIN
         value.move< std::string > (that.value);
         break;
 
@@ -579,20 +619,22 @@ namespace yy {
 #if YYDEBUG
   template <typename Base>
   void
-  parser::yy_print_ (std::ostream& yyo, const basic_symbol<Base>& yysym) const
+  parser::yy_print_ (std::ostream& yyo,
+                                     const basic_symbol<Base>& yysym) const
   {
     std::ostream& yyoutput = yyo;
-    YY_USE (yyoutput);
+    YYUSE (yyoutput);
+    symbol_number_type yytype = yysym.type_get ();
+#if defined __GNUC__ && ! defined __clang__ && ! defined __ICC && __GNUC__ * 100 + __GNUC_MINOR__ <= 408
+    // Avoid a (spurious) G++ 4.8 warning about "array subscript is
+    // below array bounds".
     if (yysym.empty ())
-      yyo << "empty symbol";
-    else
-      {
-        symbol_kind_type yykind = yysym.kind ();
-        yyo << (yykind < YYNTOKENS ? "token" : "nterm")
-            << ' ' << yysym.name () << " (";
-        YY_USE (yykind);
-        yyo << ')';
-      }
+      std::abort ();
+#endif
+    yyo << (yytype < yyntokens_ ? "token" : "nterm")
+        << ' ' << yytname_[yytype] << " (";
+    YYUSE (yytype);
+    yyo << ')';
   }
 #endif
 
@@ -616,7 +658,7 @@ namespace yy {
   }
 
   void
-  parser::yypop_ (int n) YY_NOEXCEPT
+  parser::yypop_ (int n)
   {
     yystack_.pop (n);
   }
@@ -651,21 +693,21 @@ namespace yy {
   parser::state_type
   parser::yy_lr_goto_state_ (state_type yystate, int yysym)
   {
-    int yyr = yypgoto_[yysym - YYNTOKENS] + yystate;
+    int yyr = yypgoto_[yysym - yyntokens_] + yystate;
     if (0 <= yyr && yyr <= yylast_ && yycheck_[yyr] == yystate)
       return yytable_[yyr];
     else
-      return yydefgoto_[yysym - YYNTOKENS];
+      return yydefgoto_[yysym - yyntokens_];
   }
 
   bool
-  parser::yy_pact_value_is_default_ (int yyvalue) YY_NOEXCEPT
+  parser::yy_pact_value_is_default_ (int yyvalue)
   {
     return yyvalue == yypact_ninf_;
   }
 
   bool
-  parser::yy_table_value_is_error_ (int yyvalue) YY_NOEXCEPT
+  parser::yy_table_value_is_error_ (int yyvalue)
   {
     return yyvalue == yytable_ninf_;
   }
@@ -712,7 +754,6 @@ namespace yy {
   `-----------------------------------------------*/
   yynewstate:
     YYCDEBUG << "Entering state " << int (yystack_[0].state) << '\n';
-    YY_STACK_PRINT ();
 
     // Accept?
     if (yystack_[0].state == yyfinal_)
@@ -733,7 +774,7 @@ namespace yy {
     // Read a lookahead token.
     if (yyla.empty ())
       {
-        YYCDEBUG << "Reading a token\n";
+        YYCDEBUG << "Reading a token: ";
 #if YY_EXCEPTIONS
         try
 #endif // YY_EXCEPTIONS
@@ -752,20 +793,10 @@ namespace yy {
       }
     YY_SYMBOL_PRINT ("Next token is", yyla);
 
-    if (yyla.kind () == symbol_kind::S_YYerror)
-    {
-      // The scanner already issued an error message, process directly
-      // to error recovery.  But do not keep the error token as
-      // lookahead, it is too special and may lead us to an endless
-      // loop in error recovery. */
-      yyla.kind_ = symbol_kind::S_YYUNDEF;
-      goto yyerrlab1;
-    }
-
     /* If the proper action on seeing token YYLA.TYPE is to reduce or
        to detect an error, take that action.  */
-    yyn += yyla.kind ();
-    if (yyn < 0 || yylast_ < yyn || yycheck_[yyn] != yyla.kind ())
+    yyn += yyla.type_get ();
+    if (yyn < 0 || yylast_ < yyn || yycheck_[yyn] != yyla.type_get ())
       {
         goto yydefault;
       }
@@ -812,84 +843,84 @@ namespace yy {
          when using variants.  */
       switch (yyr1_[yyn])
     {
-      case symbol_kind::S_root: // root
-      case symbol_kind::S_Goal: // Goal
-      case symbol_kind::S_ClassDeclarationList: // ClassDeclarationList
-      case symbol_kind::S_MainClass: // MainClass
-      case symbol_kind::S_Methods: // Methods
-      case symbol_kind::S_main: // main
-      case symbol_kind::S_void: // void
-      case symbol_kind::S_MainBody: // MainBody
-      case symbol_kind::S_Arg: // Arg
-      case symbol_kind::S_ClassDeclaration: // ClassDeclaration
-      case symbol_kind::S_VarDeclarationList: // VarDeclarationList
-      case symbol_kind::S_MethodDeclarationList: // MethodDeclarationList
-      case symbol_kind::S_VarDeclaration: // VarDeclaration
-      case symbol_kind::S_MethodDeclaration: // MethodDeclaration
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_Parameter: // Parameter
-      case symbol_kind::S_body: // body
-      case symbol_kind::S_return: // return
-      case symbol_kind::S_StatementVars: // StatementVars
-      case symbol_kind::S_vs: // vs
-      case symbol_kind::S_type: // type
-      case symbol_kind::S_statement: // statement
-      case symbol_kind::S_IfStatement: // IfStatement
-      case symbol_kind::S_ElseStatement: // ElseStatement
-      case symbol_kind::S_StatementList: // StatementList
-      case symbol_kind::S_expression: // expression
-      case symbol_kind::S_ExtendedFunc: // ExtendedFunc
-      case symbol_kind::S_Index: // Index
-      case symbol_kind::S_Argumentlist: // Argumentlist
-      case symbol_kind::S_factor: // factor
-      case symbol_kind::S_identifier: // identifier
+      case 49: // root
+      case 50: // Goal
+      case 51: // ClassDeclarationList
+      case 52: // MainClass
+      case 53: // Methods
+      case 54: // main
+      case 55: // void
+      case 56: // MainBody
+      case 57: // Arg
+      case 58: // ClassDeclaration
+      case 59: // VarDeclarationList
+      case 60: // MethodDeclarationList
+      case 61: // VarDeclaration
+      case 62: // MethodDeclaration
+      case 63: // ParameterList
+      case 64: // Parameter
+      case 65: // body
+      case 66: // return
+      case 67: // StatementVars
+      case 68: // vs
+      case 69: // type
+      case 70: // statement
+      case 71: // IfStatement
+      case 72: // ElseStatement
+      case 73: // StatementList
+      case 74: // expression
+      case 75: // ExtendedFunc
+      case 76: // Index
+      case 77: // Argumentlist
+      case 78: // factor
+      case 79: // identifier
         yylhs.value.emplace< Node * > ();
         break;
 
-      case symbol_kind::S_PLUSOP: // PLUSOP
-      case symbol_kind::S_MINUSOP: // MINUSOP
-      case symbol_kind::S_MULTOP: // MULTOP
-      case symbol_kind::S_INT: // INT
-      case symbol_kind::S_LP: // LP
-      case symbol_kind::S_RP: // RP
-      case symbol_kind::S_CLASS: // CLASS
-      case symbol_kind::S_EXTENDS: // EXTENDS
-      case symbol_kind::S_PUBLIC: // PUBLIC
-      case symbol_kind::S_STATIC: // STATIC
-      case symbol_kind::S_VOID: // VOID
-      case symbol_kind::S_INT_KEYWORD: // INT_KEYWORD
-      case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_IF: // IF
-      case symbol_kind::S_ELSE: // ELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_RETURN: // RETURN
-      case symbol_kind::S_TRUE: // TRUE
-      case symbol_kind::S_FALSE: // FALSE
-      case symbol_kind::S_THIS: // THIS
-      case symbol_kind::S_NEW: // NEW
-      case symbol_kind::S_LENGTH: // LENGTH
-      case symbol_kind::S_PRINTLN: // PRINTLN
-      case symbol_kind::S_STRINGLITERAL: // STRINGLITERAL
-      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-      case symbol_kind::S_LCB: // LCB
-      case symbol_kind::S_RCB: // RCB
-      case symbol_kind::S_LB: // LB
-      case symbol_kind::S_RB: // RB
-      case symbol_kind::S_ASSIGNOP: // ASSIGNOP
-      case symbol_kind::S_SEMICOLON: // SEMICOLON
-      case symbol_kind::S_COMMA: // COMMA
-      case symbol_kind::S_DOT: // DOT
-      case symbol_kind::S_ANDOP: // ANDOP
-      case symbol_kind::S_EQOP: // EQOP
-      case symbol_kind::S_NEOP: // NEOP
-      case symbol_kind::S_OROP: // OROP
-      case symbol_kind::S_DIVOP: // DIVOP
-      case symbol_kind::S_MODOP: // MODOP
-      case symbol_kind::S_NOTOP: // NOTOP
-      case symbol_kind::S_LCHEV: // LCHEV
-      case symbol_kind::S_RCHEV: // RCHEV
-      case symbol_kind::S_STRING_KEYWORD: // STRING_KEYWORD
-      case symbol_kind::S_MAIN: // MAIN
+      case 3: // PLUSOP
+      case 4: // MINUSOP
+      case 5: // MULTOP
+      case 6: // INT
+      case 7: // LP
+      case 8: // RP
+      case 9: // CLASS
+      case 10: // EXTENDS
+      case 11: // PUBLIC
+      case 12: // STATIC
+      case 13: // VOID
+      case 14: // INT_KEYWORD
+      case 15: // BOOLEAN
+      case 16: // IF
+      case 17: // ELSE
+      case 18: // WHILE
+      case 19: // RETURN
+      case 20: // TRUE
+      case 21: // FALSE
+      case 22: // THIS
+      case 23: // NEW
+      case 24: // LENGTH
+      case 25: // PRINTLN
+      case 26: // STRINGLITERAL
+      case 27: // IDENTIFIER
+      case 28: // LCB
+      case 29: // RCB
+      case 30: // LB
+      case 31: // RB
+      case 32: // ASSIGNOP
+      case 33: // SEMICOLON
+      case 34: // COMMA
+      case 35: // DOT
+      case 36: // ANDOP
+      case 37: // EQOP
+      case 38: // NEOP
+      case 39: // OROP
+      case 40: // DIVOP
+      case 41: // MODOP
+      case 42: // NOTOP
+      case 43: // LCHEV
+      case 44: // RCHEV
+      case 45: // STRING_KEYWORD
+      case 46: // MAIN
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -907,61 +938,61 @@ namespace yy {
         {
           switch (yyn)
             {
-  case 2: // root: Goal
+  case 2:
 #line 49 "parser.yy"
                  {root = yystack_[0].value.as < Node * > ();}
-#line 914 "parser.tab.cc"
+#line 945 "parser.tab.cc"
     break;
 
-  case 3: // Goal: MainClass "end of file"
+  case 3:
 #line 52 "parser.yy"
                     {
                           yylhs.value.as < Node * > () = new Node("Goal", "", yylineno);
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
           }
-#line 923 "parser.tab.cc"
+#line 954 "parser.tab.cc"
     break;
 
-  case 4: // Goal: MainClass ClassDeclarationList "end of file"
+  case 4:
 #line 56 "parser.yy"
                                                {
                           yylhs.value.as < Node * > () = new Node("Goal", "", yylineno);
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
           }
-#line 933 "parser.tab.cc"
+#line 964 "parser.tab.cc"
     break;
 
-  case 5: // ClassDeclarationList: ClassDeclaration
+  case 5:
 #line 64 "parser.yy"
                                        {
                           yylhs.value.as < Node * > () = new Node("ClassDeclarationList", "", yylineno);
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
 
                           }
-#line 943 "parser.tab.cc"
+#line 974 "parser.tab.cc"
     break;
 
-  case 6: // ClassDeclarationList: ClassDeclarationList ClassDeclaration
+  case 6:
 #line 69 "parser.yy"
                                                                   {
                             yylhs.value.as < Node * > () = yystack_[1].value.as < Node * > (); 
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                           }
-#line 952 "parser.tab.cc"
+#line 983 "parser.tab.cc"
     break;
 
-  case 7: // MainClass: PUBLIC CLASS identifier LCB Methods RCB
+  case 7:
 #line 75 "parser.yy"
                                                    {
                             yylhs.value.as < Node * > () = new Node("MainClass", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[3].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                           }
-#line 962 "parser.tab.cc"
+#line 993 "parser.tab.cc"
     break;
 
-  case 8: // Methods: PUBLIC STATIC void main Arg MainBody
+  case 8:
 #line 82 "parser.yy"
                                               {
                             yylhs.value.as < Node * > () = new Node("Method", "", yylineno);
@@ -970,70 +1001,70 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
 }
-#line 974 "parser.tab.cc"
+#line 1005 "parser.tab.cc"
     break;
 
-  case 9: // main: MAIN
+  case 9:
 #line 91 "parser.yy"
             { yylhs.value.as < Node * > () = new Node("Name", yystack_[0].value.as < std::string > (), yylineno); }
-#line 980 "parser.tab.cc"
+#line 1011 "parser.tab.cc"
     break;
 
-  case 10: // void: VOID
+  case 10:
 #line 92 "parser.yy"
             { yylhs.value.as < Node * > () = new Node("Type", yystack_[0].value.as < std::string > (), yylineno); }
-#line 986 "parser.tab.cc"
+#line 1017 "parser.tab.cc"
     break;
 
-  case 11: // MainBody: LCB statement RCB
+  case 11:
 #line 95 "parser.yy"
                             {
                             yylhs.value.as < Node * > () = new Node("MainBody", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
 }
-#line 995 "parser.tab.cc"
+#line 1026 "parser.tab.cc"
     break;
 
-  case 12: // Arg: LP STRING_KEYWORD LB RB identifier RP
+  case 12:
 #line 100 "parser.yy"
                                            {
                             yylhs.value.as < Node * > () = new Node("Argument", yystack_[4].value.as < std::string > () + yystack_[3].value.as < std::string > () + yystack_[2].value.as < std::string > (), yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                           
 }
-#line 1005 "parser.tab.cc"
+#line 1036 "parser.tab.cc"
     break;
 
-  case 13: // ClassDeclaration: CLASS identifier LCB RCB
+  case 13:
 #line 107 "parser.yy"
                                             {
                             yylhs.value.as < Node * > () = new Node("ClassDeclaration", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
             }
-#line 1014 "parser.tab.cc"
+#line 1045 "parser.tab.cc"
     break;
 
-  case 14: // ClassDeclaration: CLASS identifier LCB VarDeclarationList RCB
+  case 14:
 #line 111 "parser.yy"
                                                           {
                             yylhs.value.as < Node * > () = new Node("ClassDeclaration", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[3].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
             }
-#line 1024 "parser.tab.cc"
+#line 1055 "parser.tab.cc"
     break;
 
-  case 15: // ClassDeclaration: CLASS identifier LCB MethodDeclarationList RCB
+  case 15:
 #line 116 "parser.yy"
                                                              {
                             yylhs.value.as < Node * > () = new Node("ClassDeclaration", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[3].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
             }
-#line 1034 "parser.tab.cc"
+#line 1065 "parser.tab.cc"
     break;
 
-  case 16: // ClassDeclaration: CLASS identifier LCB VarDeclarationList MethodDeclarationList RCB
+  case 16:
 #line 121 "parser.yy"
                                                                                 {
                             yylhs.value.as < Node * > () = new Node("ClassDeclaration", "", yylineno);
@@ -1041,46 +1072,46 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
             }
-#line 1045 "parser.tab.cc"
+#line 1076 "parser.tab.cc"
     break;
 
-  case 17: // VarDeclarationList: VarDeclaration
+  case 17:
 #line 129 "parser.yy"
                                    { 
                                 yylhs.value.as < Node * > () = new Node("VarDeclarationList", "", yylineno); 
                                 yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ()); 
                                 }
-#line 1054 "parser.tab.cc"
+#line 1085 "parser.tab.cc"
     break;
 
-  case 18: // VarDeclarationList: VarDeclarationList VarDeclaration
+  case 18:
 #line 133 "parser.yy"
                                                   { 
                                 yylhs.value.as < Node * > () = yystack_[1].value.as < Node * > ();
                                 yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ()); 
               }
-#line 1063 "parser.tab.cc"
+#line 1094 "parser.tab.cc"
     break;
 
-  case 19: // MethodDeclarationList: MethodDeclaration
+  case 19:
 #line 140 "parser.yy"
                                          { 
                                 yylhs.value.as < Node * > () = new Node("MethodDeclarationList", "", yylineno); 
                                 yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                                 }
-#line 1072 "parser.tab.cc"
+#line 1103 "parser.tab.cc"
     break;
 
-  case 20: // MethodDeclarationList: MethodDeclarationList MethodDeclaration
+  case 20:
 #line 144 "parser.yy"
                                                                 { 
                                 yylhs.value.as < Node * > () = yystack_[1].value.as < Node * > (); 
                                 yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ()); 
                                 }
-#line 1081 "parser.tab.cc"
+#line 1112 "parser.tab.cc"
     break;
 
-  case 21: // VarDeclaration: type identifier SEMICOLON
+  case 21:
 #line 149 "parser.yy"
                                           {
                             yylhs.value.as < Node * > () = new Node("VarDeclaration", " ", yylineno);
@@ -1088,10 +1119,10 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                             
             }
-#line 1092 "parser.tab.cc"
+#line 1123 "parser.tab.cc"
     break;
 
-  case 22: // MethodDeclaration: PUBLIC type identifier LP RP LCB body RCB
+  case 22:
 #line 157 "parser.yy"
                                                              {
                             yylhs.value.as < Node * > () = new Node("MethodDeclaration", "", yylineno);
@@ -1100,10 +1131,10 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
  
             }
-#line 1104 "parser.tab.cc"
+#line 1135 "parser.tab.cc"
     break;
 
-  case 23: // MethodDeclaration: PUBLIC type identifier LP ParameterList RP LCB body RCB
+  case 23:
 #line 164 "parser.yy"
                                                                       {
                             yylhs.value.as < Node * > () = new Node("methodDeclaration", "", yylineno);
@@ -1112,29 +1143,29 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[4].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                                         }
-#line 1116 "parser.tab.cc"
+#line 1147 "parser.tab.cc"
     break;
 
-  case 24: // ParameterList: Parameter
+  case 24:
 #line 176 "parser.yy"
                         {
                                 yylhs.value.as < Node * > () = new Node("Parameters", "", yylineno);
                                 yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                                 }
-#line 1125 "parser.tab.cc"
+#line 1156 "parser.tab.cc"
     break;
 
-  case 25: // ParameterList: ParameterList COMMA Parameter
+  case 25:
 #line 180 "parser.yy"
                                                                 {
                                 yylhs.value.as < Node * > () = new Node("ParameterList", "", yylineno);
                                 yylhs.value.as < Node * > ()=yystack_[2].value.as < Node * > ();
                                 yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                                 }
-#line 1135 "parser.tab.cc"
+#line 1166 "parser.tab.cc"
     break;
 
-  case 26: // Parameter: type identifier
+  case 26:
 #line 187 "parser.yy"
                           {
                                 yylhs.value.as < Node * > () = new Node("Parameter", "", yylineno);
@@ -1142,118 +1173,118 @@ namespace yy {
                                 yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
 
 }
-#line 1146 "parser.tab.cc"
+#line 1177 "parser.tab.cc"
     break;
 
-  case 27: // body: return
+  case 27:
 #line 195 "parser.yy"
              {
                           yylhs.value.as < Node * > () = new Node("Body", "", yylineno);
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
       }
-#line 1155 "parser.tab.cc"
+#line 1186 "parser.tab.cc"
     break;
 
-  case 28: // body: StatementVars return
+  case 28:
 #line 199 "parser.yy"
                              {
                           yylhs.value.as < Node * > ()=yystack_[1].value.as < Node * > () ;
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
       }
-#line 1164 "parser.tab.cc"
+#line 1195 "parser.tab.cc"
     break;
 
-  case 29: // return: RETURN expression SEMICOLON
+  case 29:
 #line 205 "parser.yy"
                                     {
                           yylhs.value.as < Node * > () = new Node("Return", "", yylineno) ;
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ()) ;
 
     }
-#line 1174 "parser.tab.cc"
+#line 1205 "parser.tab.cc"
     break;
 
-  case 30: // StatementVars: vs
+  case 30:
 #line 213 "parser.yy"
                   {
                     yylhs.value.as < Node * > () = new Node("Body", "", yylineno) ;
                     yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
               }
-#line 1183 "parser.tab.cc"
+#line 1214 "parser.tab.cc"
     break;
 
-  case 31: // StatementVars: StatementVars vs
+  case 31:
 #line 217 "parser.yy"
                                  {
                     yylhs.value.as < Node * > () = yystack_[1].value.as < Node * > ();
                     yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ()) ;
               }
-#line 1192 "parser.tab.cc"
+#line 1223 "parser.tab.cc"
     break;
 
-  case 32: // vs: VarDeclaration
+  case 32:
 #line 223 "parser.yy"
                    { yylhs.value.as < Node * > () = yystack_[0].value.as < Node * > () ;}
-#line 1198 "parser.tab.cc"
+#line 1229 "parser.tab.cc"
     break;
 
-  case 33: // vs: statement
+  case 33:
 #line 223 "parser.yy"
                                             {yylhs.value.as < Node * > () = yystack_[0].value.as < Node * > ();}
-#line 1204 "parser.tab.cc"
+#line 1235 "parser.tab.cc"
     break;
 
-  case 34: // type: BOOLEAN
+  case 34:
 #line 225 "parser.yy"
                { yylhs.value.as < Node * > () = new Node("Type", yystack_[0].value.as < std::string > (), yylineno) ; }
-#line 1210 "parser.tab.cc"
+#line 1241 "parser.tab.cc"
     break;
 
-  case 35: // type: INT_KEYWORD
+  case 35:
 #line 225 "parser.yy"
                                                                         { yylhs.value.as < Node * > () = new Node("Type", yystack_[0].value.as < std::string > (), yylineno) ; }
-#line 1216 "parser.tab.cc"
+#line 1247 "parser.tab.cc"
     break;
 
-  case 36: // type: IDENTIFIER
+  case 36:
 #line 225 "parser.yy"
                                                                                                                                { yylhs.value.as < Node * > () = new Node("Type", yystack_[0].value.as < std::string > (), yylineno) ; }
-#line 1222 "parser.tab.cc"
+#line 1253 "parser.tab.cc"
     break;
 
-  case 37: // type: INT_KEYWORD LB RB
+  case 37:
 #line 225 "parser.yy"
                                                                                                                                                                                               { yylhs.value.as < Node * > () = new Node("Type", yystack_[2].value.as < std::string > () + yystack_[1].value.as < std::string > () + yystack_[0].value.as < std::string > (), yylineno) ; }
-#line 1228 "parser.tab.cc"
+#line 1259 "parser.tab.cc"
     break;
 
-  case 38: // statement: LCB RCB
+  case 38:
 #line 230 "parser.yy"
                    {
                             yylhs.value.as < Node * > () = new Node("EmptyStateMentList", "", yylineno);
             }
-#line 1236 "parser.tab.cc"
+#line 1267 "parser.tab.cc"
     break;
 
-  case 39: // statement: LCB StatementList RCB
+  case 39:
 #line 233 "parser.yy"
                                                 {
                               yylhs.value.as < Node * > () = yystack_[1].value.as < Node * > ();
                           }
-#line 1244 "parser.tab.cc"
+#line 1275 "parser.tab.cc"
     break;
 
-  case 40: // statement: IF LP expression RP IfStatement
+  case 40:
 #line 238 "parser.yy"
                                             {
                             yylhs.value.as < Node * > () = new Node("IF", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1254 "parser.tab.cc"
+#line 1285 "parser.tab.cc"
     break;
 
-  case 41: // statement: IF LP expression RP IfStatement ELSE ElseStatement
+  case 41:
 #line 243 "parser.yy"
                                                                  {
                             yylhs.value.as < Node * > () = new Node("IF ELSE", "", yylineno);
@@ -1261,39 +1292,39 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                           }
-#line 1265 "parser.tab.cc"
+#line 1296 "parser.tab.cc"
     break;
 
-  case 42: // statement: WHILE LP expression RP IfStatement
+  case 42:
 #line 249 "parser.yy"
                                                  {
                             yylhs.value.as < Node * > () = new Node("WHILE", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1275 "parser.tab.cc"
+#line 1306 "parser.tab.cc"
     break;
 
-  case 43: // statement: PRINTLN LP expression RP SEMICOLON
+  case 43:
 #line 254 "parser.yy"
                                                  {
                             yylhs.value.as < Node * > () = new Node("Print", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
             }
-#line 1284 "parser.tab.cc"
+#line 1315 "parser.tab.cc"
     break;
 
-  case 44: // statement: identifier ASSIGNOP expression SEMICOLON
+  case 44:
 #line 258 "parser.yy"
                                                        {
                             yylhs.value.as < Node * > () = new Node("Assignment", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[3].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
             }
-#line 1294 "parser.tab.cc"
+#line 1325 "parser.tab.cc"
     break;
 
-  case 45: // statement: identifier Index ASSIGNOP expression SEMICOLON
+  case 45:
 #line 263 "parser.yy"
                                                              {
                             yylhs.value.as < Node * > () = new Node("Assignment", "", yylineno);
@@ -1301,46 +1332,46 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[3].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
             }
-#line 1305 "parser.tab.cc"
+#line 1336 "parser.tab.cc"
     break;
 
-  case 46: // IfStatement: statement
+  case 46:
 #line 271 "parser.yy"
                        {
                             yylhs.value.as < Node * > () = new Node("True", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                           }
-#line 1314 "parser.tab.cc"
+#line 1345 "parser.tab.cc"
     break;
 
-  case 47: // ElseStatement: statement
+  case 47:
 #line 276 "parser.yy"
                          {
                             yylhs.value.as < Node * > () = new Node("False", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                           }
-#line 1323 "parser.tab.cc"
+#line 1354 "parser.tab.cc"
     break;
 
-  case 48: // StatementList: statement
+  case 48:
 #line 282 "parser.yy"
                          {
                             yylhs.value.as < Node * > () = new Node("Statements", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                         }
-#line 1332 "parser.tab.cc"
+#line 1363 "parser.tab.cc"
     break;
 
-  case 49: // StatementList: StatementList statement
+  case 49:
 #line 286 "parser.yy"
                                                {
                             yylhs.value.as < Node * > () = yystack_[1].value.as < Node * > (); 
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                         }
-#line 1341 "parser.tab.cc"
+#line 1372 "parser.tab.cc"
     break;
 
-  case 50: // expression: expression PLUSOP expression
+  case 50:
 #line 294 "parser.yy"
                                          {      /*
                                                   Create a subtree that corresponds to the AddExpression
@@ -1352,10 +1383,10 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                             /* printf("r1 "); */
                           }
-#line 1356 "parser.tab.cc"
+#line 1387 "parser.tab.cc"
     break;
 
-  case 51: // expression: expression MINUSOP expression
+  case 51:
 #line 304 "parser.yy"
                                             {
                             yylhs.value.as < Node * > () = new Node("SubExpression", "", yylineno);
@@ -1363,10 +1394,10 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                             /* printf("r2 "); */
                           }
-#line 1367 "parser.tab.cc"
+#line 1398 "parser.tab.cc"
     break;
 
-  case 52: // expression: expression MULTOP expression
+  case 52:
 #line 310 "parser.yy"
                                            {
                             yylhs.value.as < Node * > () = new Node("MultExpression", "", yylineno);
@@ -1374,227 +1405,227 @@ namespace yy {
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                             /* printf("r3 "); */
                           }
-#line 1378 "parser.tab.cc"
+#line 1409 "parser.tab.cc"
     break;
 
-  case 53: // expression: expression DIVOP expression
+  case 53:
 #line 316 "parser.yy"
                                           {
                             yylhs.value.as < Node * > () = new Node("DivExpression", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1388 "parser.tab.cc"
+#line 1419 "parser.tab.cc"
     break;
 
-  case 54: // expression: expression ANDOP expression
+  case 54:
 #line 321 "parser.yy"
                                           {
                             yylhs.value.as < Node * > () = new Node("AndOPExpression", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1398 "parser.tab.cc"
+#line 1429 "parser.tab.cc"
     break;
 
-  case 55: // expression: expression OROP expression
+  case 55:
 #line 326 "parser.yy"
                                          {
                             yylhs.value.as < Node * > () = new Node("OrOPExpression", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1408 "parser.tab.cc"
+#line 1439 "parser.tab.cc"
     break;
 
-  case 56: // expression: expression LCHEV expression
+  case 56:
 #line 331 "parser.yy"
                                           {
                             yylhs.value.as < Node * > () = new Node("LChevExpression", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1418 "parser.tab.cc"
+#line 1449 "parser.tab.cc"
     break;
 
-  case 57: // expression: expression RCHEV expression
+  case 57:
 #line 336 "parser.yy"
                                           {
                             yylhs.value.as < Node * > () = new Node("RChevExpression", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1428 "parser.tab.cc"
+#line 1459 "parser.tab.cc"
     break;
 
-  case 58: // expression: expression EQOP expression
+  case 58:
 #line 341 "parser.yy"
                                          {
                             yylhs.value.as < Node * > () = new Node("EqOpExpression", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1438 "parser.tab.cc"
+#line 1469 "parser.tab.cc"
     break;
 
-  case 59: // expression: expression Index
+  case 59:
 #line 346 "parser.yy"
                                {
                             yylhs.value.as < Node * > () = new Node("ExpressionLBExpressionRB", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1448 "parser.tab.cc"
+#line 1479 "parser.tab.cc"
     break;
 
-  case 60: // expression: expression DOT LENGTH
+  case 60:
 #line 351 "parser.yy"
                                     {
                             yylhs.value.as < Node * > () = new Node("ExpressionDotLength", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
             }
-#line 1457 "parser.tab.cc"
+#line 1488 "parser.tab.cc"
     break;
 
-  case 61: // expression: expression DOT ExtendedFunc
+  case 61:
 #line 356 "parser.yy"
                                           {
                             yylhs.value.as < Node * > () = new Node("Method Invocation", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1467 "parser.tab.cc"
+#line 1498 "parser.tab.cc"
     break;
 
-  case 62: // expression: NEW INT_KEYWORD Index
+  case 62:
 #line 361 "parser.yy"
                                     {
                             yylhs.value.as < Node * > () = new Node("New Int", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1476 "parser.tab.cc"
+#line 1507 "parser.tab.cc"
     break;
 
-  case 63: // expression: NEW identifier LP RP
+  case 63:
 #line 365 "parser.yy"
                                    {
                             yylhs.value.as < Node * > () = new Node("New", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
             }
-#line 1485 "parser.tab.cc"
+#line 1516 "parser.tab.cc"
     break;
 
-  case 64: // expression: NOTOP expression
+  case 64:
 #line 369 "parser.yy"
                                {
                             yylhs.value.as < Node * > () = new Node("Not Equal", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
             }
-#line 1494 "parser.tab.cc"
+#line 1525 "parser.tab.cc"
     break;
 
-  case 65: // expression: factor
+  case 65:
 #line 373 "parser.yy"
                      {yylhs.value.as < Node * > () = yystack_[0].value.as < Node * > (); /* printf("r4 ");*/}
-#line 1500 "parser.tab.cc"
+#line 1531 "parser.tab.cc"
     break;
 
-  case 66: // expression: VarDeclaration
+  case 66:
 #line 374 "parser.yy"
                              {yylhs.value.as < Node * > () = yystack_[0].value.as < Node * > ();}
-#line 1506 "parser.tab.cc"
+#line 1537 "parser.tab.cc"
     break;
 
-  case 67: // ExtendedFunc: identifier LP RP
+  case 67:
 #line 377 "parser.yy"
                                {
                             yylhs.value.as < Node * > () = new Node(".function", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                   }
-#line 1515 "parser.tab.cc"
+#line 1546 "parser.tab.cc"
     break;
 
-  case 68: // ExtendedFunc: identifier LP Argumentlist RP
+  case 68:
 #line 381 "parser.yy"
                                                  {
                             yylhs.value.as < Node * > () = new Node(".function", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[3].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                   }
-#line 1525 "parser.tab.cc"
+#line 1556 "parser.tab.cc"
     break;
 
-  case 69: // Index: LB expression RB
+  case 69:
 #line 388 "parser.yy"
                          {
                   yylhs.value.as < Node * > () = new Node("Index", "", yylineno); 
                   yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                   }
-#line 1534 "parser.tab.cc"
+#line 1565 "parser.tab.cc"
     break;
 
-  case 70: // Argumentlist: expression
+  case 70:
 #line 394 "parser.yy"
                          {
                             yylhs.value.as < Node * > () = new Node("Arguments", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                           }
-#line 1543 "parser.tab.cc"
+#line 1574 "parser.tab.cc"
     break;
 
-  case 71: // Argumentlist: Argumentlist COMMA expression
+  case 71:
 #line 398 "parser.yy"
                                             {
                             yylhs.value.as < Node * > () = yystack_[2].value.as < Node * > (); 
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
                           }
-#line 1552 "parser.tab.cc"
+#line 1583 "parser.tab.cc"
     break;
 
-  case 72: // factor: INT
+  case 72:
 #line 407 "parser.yy"
                           {  yylhs.value.as < Node * > () = new Node("Int", yystack_[0].value.as < std::string > (), yylineno); }
-#line 1558 "parser.tab.cc"
+#line 1589 "parser.tab.cc"
     break;
 
-  case 73: // factor: identifier
+  case 73:
 #line 408 "parser.yy"
                           {  yylhs.value.as < Node * > () = yystack_[0].value.as < Node * > (); }
-#line 1564 "parser.tab.cc"
+#line 1595 "parser.tab.cc"
     break;
 
-  case 74: // factor: TRUE
+  case 74:
 #line 409 "parser.yy"
                           {  yylhs.value.as < Node * > () = new Node("True", yystack_[0].value.as < std::string > (), yylineno); }
-#line 1570 "parser.tab.cc"
+#line 1601 "parser.tab.cc"
     break;
 
-  case 75: // factor: FALSE
+  case 75:
 #line 410 "parser.yy"
                           {  yylhs.value.as < Node * > () = new Node("False", yystack_[0].value.as < std::string > (), yylineno); }
-#line 1576 "parser.tab.cc"
+#line 1607 "parser.tab.cc"
     break;
 
-  case 76: // factor: THIS
+  case 76:
 #line 411 "parser.yy"
                           {  yylhs.value.as < Node * > () = new Node("This", yystack_[0].value.as < std::string > (), yylineno); }
-#line 1582 "parser.tab.cc"
+#line 1613 "parser.tab.cc"
     break;
 
-  case 77: // factor: LP expression RP
+  case 77:
 #line 412 "parser.yy"
                                { yylhs.value.as < Node * > () = yystack_[1].value.as < Node * > (); }
-#line 1588 "parser.tab.cc"
+#line 1619 "parser.tab.cc"
     break;
 
-  case 78: // identifier: IDENTIFIER
+  case 78:
 #line 415 "parser.yy"
                        { yylhs.value.as < Node * > () = new Node("ID/Name", yystack_[0].value.as < std::string > (), yylineno) ; }
-#line 1594 "parser.tab.cc"
+#line 1625 "parser.tab.cc"
     break;
 
 
-#line 1598 "parser.tab.cc"
+#line 1629 "parser.tab.cc"
 
             default:
               break;
@@ -1611,6 +1642,7 @@ namespace yy {
       YY_SYMBOL_PRINT ("-> $$ =", yylhs);
       yypop_ (yylen);
       yylen = 0;
+      YY_STACK_PRINT ();
 
       // Shift the result of the reduction.
       yypush_ (YY_NULLPTR, YY_MOVE (yylhs));
@@ -1626,9 +1658,7 @@ namespace yy {
     if (!yyerrstatus_)
       {
         ++yynerrs_;
-        context yyctx (*this, yyla);
-        std::string msg = yysyntax_error_ (yyctx);
-        error (YY_MOVE (msg));
+        error (yysyntax_error_ (yystack_[0].state, yyla));
       }
 
 
@@ -1638,7 +1668,7 @@ namespace yy {
            error, discard it.  */
 
         // Return failure if at end of input.
-        if (yyla.kind () == symbol_kind::S_YYEOF)
+        if (yyla.type_get () == yyeof_)
           YYABORT;
         else if (!yyla.empty ())
           {
@@ -1664,7 +1694,6 @@ namespace yy {
        this YYERROR.  */
     yypop_ (yylen);
     yylen = 0;
-    YY_STACK_PRINT ();
     goto yyerrlab1;
 
 
@@ -1673,32 +1702,30 @@ namespace yy {
   `-------------------------------------------------------------*/
   yyerrlab1:
     yyerrstatus_ = 3;   // Each real token shifted decrements this.
-    // Pop stack until we find a state that shifts the error token.
-    for (;;)
-      {
-        yyn = yypact_[+yystack_[0].state];
-        if (!yy_pact_value_is_default_ (yyn))
-          {
-            yyn += symbol_kind::S_YYerror;
-            if (0 <= yyn && yyn <= yylast_
-                && yycheck_[yyn] == symbol_kind::S_YYerror)
-              {
-                yyn = yytable_[yyn];
-                if (0 < yyn)
-                  break;
-              }
-          }
-
-        // Pop the current state because it cannot handle the error token.
-        if (yystack_.size () == 1)
-          YYABORT;
-
-        yy_destroy_ ("Error: popping", yystack_[0]);
-        yypop_ ();
-        YY_STACK_PRINT ();
-      }
     {
       stack_symbol_type error_token;
+      for (;;)
+        {
+          yyn = yypact_[+yystack_[0].state];
+          if (!yy_pact_value_is_default_ (yyn))
+            {
+              yyn += yy_error_token_;
+              if (0 <= yyn && yyn <= yylast_ && yycheck_[yyn] == yy_error_token_)
+                {
+                  yyn = yytable_[yyn];
+                  if (0 < yyn)
+                    break;
+                }
+            }
+
+          // Pop the current state because it cannot handle the error token.
+          if (yystack_.size () == 1)
+            YYABORT;
+
+          yy_destroy_ ("Error: popping", yystack_[0]);
+          yypop_ ();
+          YY_STACK_PRINT ();
+        }
 
 
       // Shift the error token.
@@ -1734,7 +1761,6 @@ namespace yy {
     /* Do not reclaim the symbols of the rule whose action triggered
        this YYABORT or YYACCEPT.  */
     yypop_ (yylen);
-    YY_STACK_PRINT ();
     while (1 < yystack_.size ())
       {
         yy_destroy_ ("Cleanup: popping", yystack_[0]);
@@ -1768,103 +1794,18 @@ namespace yy {
     error (yyexc.what ());
   }
 
-  /* Return YYSTR after stripping away unnecessary quotes and
-     backslashes, so that it's suitable for yyerror.  The heuristic is
-     that double-quoting is unnecessary unless the string contains an
-     apostrophe, a comma, or backslash (other than backslash-backslash).
-     YYSTR is taken from yytname.  */
+  // Generate an error message.
   std::string
-  parser::yytnamerr_ (const char *yystr)
+  parser::yysyntax_error_ (state_type yystate, const symbol_type& yyla) const
   {
-    if (*yystr == '"')
-      {
-        std::string yyr;
-        char const *yyp = yystr;
+    // Number of reported tokens (one for the "unexpected", one per
+    // "expected").
+    std::ptrdiff_t yycount = 0;
+    // Its maximum.
+    enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
+    // Arguments of yyformat.
+    char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
 
-        for (;;)
-          switch (*++yyp)
-            {
-            case '\'':
-            case ',':
-              goto do_not_strip_quotes;
-
-            case '\\':
-              if (*++yyp != '\\')
-                goto do_not_strip_quotes;
-              else
-                goto append;
-
-            append:
-            default:
-              yyr += *yyp;
-              break;
-
-            case '"':
-              return yyr;
-            }
-      do_not_strip_quotes: ;
-      }
-
-    return yystr;
-  }
-
-  std::string
-  parser::symbol_name (symbol_kind_type yysymbol)
-  {
-    return yytnamerr_ (yytname_[yysymbol]);
-  }
-
-
-
-  // parser::context.
-  parser::context::context (const parser& yyparser, const symbol_type& yyla)
-    : yyparser_ (yyparser)
-    , yyla_ (yyla)
-  {}
-
-  int
-  parser::context::expected_tokens (symbol_kind_type yyarg[], int yyargn) const
-  {
-    // Actual number of expected tokens
-    int yycount = 0;
-
-    const int yyn = yypact_[+yyparser_.yystack_[0].state];
-    if (!yy_pact_value_is_default_ (yyn))
-      {
-        /* Start YYX at -YYN if negative to avoid negative indexes in
-           YYCHECK.  In other words, skip the first -YYN actions for
-           this state because they are default actions.  */
-        const int yyxbegin = yyn < 0 ? -yyn : 0;
-        // Stay within bounds of both yycheck and yytname.
-        const int yychecklim = yylast_ - yyn + 1;
-        const int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
-        for (int yyx = yyxbegin; yyx < yyxend; ++yyx)
-          if (yycheck_[yyx + yyn] == yyx && yyx != symbol_kind::S_YYerror
-              && !yy_table_value_is_error_ (yytable_[yyx + yyn]))
-            {
-              if (!yyarg)
-                ++yycount;
-              else if (yycount == yyargn)
-                return 0;
-              else
-                yyarg[yycount++] = YY_CAST (symbol_kind_type, yyx);
-            }
-      }
-
-    if (yyarg && yycount == 0 && 0 < yyargn)
-      yyarg[0] = symbol_kind::S_YYEMPTY;
-    return yycount;
-  }
-
-
-
-
-
-
-  int
-  parser::yy_syntax_error_arguments_ (const context& yyctx,
-                                                 symbol_kind_type yyarg[], int yyargn) const
-  {
     /* There are many possibilities here to consider:
        - If this state is a consistent state with a default action, then
          the only way this function was invoked is if the default action
@@ -1889,26 +1830,35 @@ namespace yy {
          one exception: it will still contain any token that will not be
          accepted due to an error action in a later state.
     */
-
-    if (!yyctx.lookahead ().empty ())
+    if (!yyla.empty ())
       {
-        if (yyarg)
-          yyarg[0] = yyctx.token ();
-        int yyn = yyctx.expected_tokens (yyarg ? yyarg + 1 : yyarg, yyargn - 1);
-        return yyn + 1;
-      }
-    return 0;
-  }
+        symbol_number_type yytoken = yyla.type_get ();
+        yyarg[yycount++] = yytname_[yytoken];
 
-  // Generate an error message.
-  std::string
-  parser::yysyntax_error_ (const context& yyctx) const
-  {
-    // Its maximum.
-    enum { YYARGS_MAX = 5 };
-    // Arguments of yyformat.
-    symbol_kind_type yyarg[YYARGS_MAX];
-    int yycount = yy_syntax_error_arguments_ (yyctx, yyarg, YYARGS_MAX);
+        int yyn = yypact_[+yystate];
+        if (!yy_pact_value_is_default_ (yyn))
+          {
+            /* Start YYX at -YYN if negative to avoid negative indexes in
+               YYCHECK.  In other words, skip the first -YYN actions for
+               this state because they are default actions.  */
+            int yyxbegin = yyn < 0 ? -yyn : 0;
+            // Stay within bounds of both yycheck and yytname.
+            int yychecklim = yylast_ - yyn + 1;
+            int yyxend = yychecklim < yyntokens_ ? yychecklim : yyntokens_;
+            for (int yyx = yyxbegin; yyx < yyxend; ++yyx)
+              if (yycheck_[yyx + yyn] == yyx && yyx != yy_error_token_
+                  && !yy_table_value_is_error_ (yytable_[yyx + yyn]))
+                {
+                  if (yycount == YYERROR_VERBOSE_ARGS_MAXIMUM)
+                    {
+                      yycount = 1;
+                      break;
+                    }
+                  else
+                    yyarg[yycount++] = yytname_[yyx];
+                }
+          }
+      }
 
     char const* yyformat = YY_NULLPTR;
     switch (yycount)
@@ -1933,7 +1883,7 @@ namespace yy {
     for (char const* yyp = yyformat; *yyp; ++yyp)
       if (yyp[0] == '%' && yyp[1] == 's' && yyi < yycount)
         {
-          yyres += symbol_name (yyarg[yyi++]);
+          yyres += yytnamerr_ (yyarg[yyi++]);
           ++yyp;
         }
       else
@@ -1999,10 +1949,10 @@ namespace yy {
      -64,    -5
   };
 
-  const unsigned char
+  const short
   parser::yydefgoto_[] =
   {
-       0,     2,     3,     9,     4,    19,    47,    41,    57,    50,
+      -1,     2,     3,     9,     4,    19,    47,    41,    57,    50,
       10,    25,    26,    97,    28,    52,    53,    72,    73,    74,
       75,    29,    76,   154,   165,    85,    98,   145,   129,   163,
       99,   100
@@ -2145,16 +2095,16 @@ namespace yy {
   };
 
 
-#if YYDEBUG || 1
+
   // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
-  // First, the terminals, then, starting at \a YYNTOKENS, nonterminals.
+  // First, the terminals, then, starting at \a yyntokens_, nonterminals.
   const char*
   const parser::yytname_[] =
   {
-  "\"end of file\"", "error", "\"invalid token\"", "PLUSOP", "MINUSOP",
-  "MULTOP", "INT", "LP", "RP", "CLASS", "EXTENDS", "PUBLIC", "STATIC",
-  "VOID", "INT_KEYWORD", "BOOLEAN", "IF", "ELSE", "WHILE", "RETURN",
-  "TRUE", "FALSE", "THIS", "NEW", "LENGTH", "PRINTLN", "STRINGLITERAL",
+  "\"end of file\"", "error", "$undefined", "PLUSOP", "MINUSOP", "MULTOP",
+  "INT", "LP", "RP", "CLASS", "EXTENDS", "PUBLIC", "STATIC", "VOID",
+  "INT_KEYWORD", "BOOLEAN", "IF", "ELSE", "WHILE", "RETURN", "TRUE",
+  "FALSE", "THIS", "NEW", "LENGTH", "PRINTLN", "STRINGLITERAL",
   "IDENTIFIER", "LCB", "RCB", "LB", "RB", "ASSIGNOP", "SEMICOLON", "COMMA",
   "DOT", "ANDOP", "EQOP", "NEOP", "OROP", "DIVOP", "MODOP", "NOTOP",
   "LCHEV", "RCHEV", "STRING_KEYWORD", "MAIN", "EQUOP", "$accept", "root",
@@ -2166,8 +2116,6 @@ namespace yy {
   "expression", "ExtendedFunc", "Index", "Argumentlist", "factor",
   "identifier", YY_NULLPTR
   };
-#endif
-
 
 #if YYDEBUG
   const short
@@ -2183,8 +2131,9 @@ namespace yy {
      394,   398,   407,   408,   409,   410,   411,   412,   415
   };
 
+  // Print the state stack on the debug stream.
   void
-  parser::yy_stack_print_ () const
+  parser::yystack_print_ ()
   {
     *yycdebug_ << "Stack now";
     for (stack_type::const_iterator
@@ -2195,8 +2144,9 @@ namespace yy {
     *yycdebug_ << '\n';
   }
 
+  // Report on the debug stream that the rule \a yyrule is going to be reduced.
   void
-  parser::yy_reduce_print_ (int yyrule) const
+  parser::yy_reduce_print_ (int yyrule)
   {
     int yylno = yyrline_[yyrule];
     int yynrhs = yyr2_[yyrule];
@@ -2212,5 +2162,5 @@ namespace yy {
 
 
 } // yy
-#line 2216 "parser.tab.cc"
+#line 2166 "parser.tab.cc"
 

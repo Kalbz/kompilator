@@ -4,6 +4,9 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <algorithm>
+
+
 
 class Record {
 private:
@@ -62,7 +65,7 @@ public:
     
     std::shared_ptr<Variable> lookup(const std::string& name) const {
         // First, search in the parameters list
-        auto paramIt = std::find_if(parameters.begin(), parameters.end(),
+        auto paramIt = find_if(parameters.begin(), parameters.end(),
                                     [&name](const std::shared_ptr<Variable>& var) { return var->getId() == name; });
         if (paramIt != parameters.end()) {
             return *paramIt;
@@ -108,87 +111,6 @@ public:
     }
 };
 
-class SymbolTable {
-private:
-    std::shared_ptr<Scope> root;
-    std::shared_ptr<Scope> current;
-    std::string semanticErrors;
-
-public:
-    SymbolTable() : root(std::make_shared<Scope>(nullptr, "", "Program")), current(root) {}
-
-    void enterScope(const std::string& n = "", const std::string& t = "") {
-        current = current->nextChild(n, t);
-    }
-
-    void exitScope() {
-        if (auto parent = current->getParent()) {
-            current = parent;
-        }
-    }
-
-    void put(const std::string& key, std::shared_ptr<Record> item) {
-        current->addRecord(key, item);
-    }
-
-    std::shared_ptr<Record> lookup(const std::string& key) {
-        return current->lookup(key);
-    }
-
-    std::shared_ptr<Record> lookupParent(const std::string& key) {
-        if (auto parent = current->getParent()) {
-            return parent->lookup(key);
-        }
-        return nullptr;
-    }
-
-    std::shared_ptr<Record> lookupCurrentScope(const std::string& key) {
-        return current->lookupCurrentScope(key);
-    }
-
-    std::shared_ptr<Record> lookupRoot(const std::string& key) {
-        return root->lookupCurrentScope(key);
-    }
-
-    void resetTable() {
-        root->resetScope(); // Preparation for new traversal
-    }
-
-    void printTable() {
-        if (root) {
-            root->printScopeTree(); // Call the correctly named method to print the scope tree
-        }
-    }
-
-    void printRoot() {
-        root->printScope();
-    }
-
-    void printCurrentScope() {
-        current->printScope();
-    }
-
-    void generateST() {
-        resetTable();
-        std::ofstream outStream("st.dot");
-
-        outStream << "digraph ScopeTree {\n";
-        int nodeId = 0;
-        root->generateDotGraph(outStream, nodeId);
-        outStream << "}\n";
-
-        outStream.close();
-        std::cout << "\nBuilt a symbol-table-tree at st.dot. Use 'make st' to generate the pdf version.\n\n";
-    }
-
-    void addLog(int lineno, const std::string& errorMsg) {
-        semanticErrors.append("\t@error at line " + std::to_string(lineno) + ". " + errorMsg + ".\n");
-    }
-
-    std::string getLog() const {
-        return semanticErrors;
-    }
-};
 
 class Scope : public std::enable_shared_from_this<Scope> {
 private:
@@ -281,5 +203,88 @@ public:
         int nodeId = 0;
         generateDotGraph(out, nodeId);
         out << "}\n";
+    }
+};
+
+
+class SymbolTable {
+private:
+    std::shared_ptr<Scope> root;
+    std::shared_ptr<Scope> current;
+    std::string semanticErrors;
+
+public:
+    SymbolTable() : root(std::make_shared<Scope>(nullptr, "", "Program")), current(root) {}
+
+    void enterScope(const std::string& n = "", const std::string& t = "") {
+        current = current->nextChild(n, t);
+    }
+
+    void exitScope() {
+        if (auto parent = current->getParent()) {
+            current = parent;
+        }
+    }
+
+    void put(const std::string& key, std::shared_ptr<Record> item) {
+        current->addRecord(key, item);
+    }
+
+    std::shared_ptr<Record> lookup(const std::string& key) {
+        return current->lookup(key);
+    }
+
+    std::shared_ptr<Record> lookupParent(const std::string& key) {
+        if (auto parent = current->getParent()) {
+            return parent->lookup(key);
+        }
+        return nullptr;
+    }
+
+    std::shared_ptr<Record> lookupCurrentScope(const std::string& key) {
+        return current->lookupCurrentScope(key);
+    }
+
+    std::shared_ptr<Record> lookupRoot(const std::string& key) {
+        return root->lookupCurrentScope(key);
+    }
+
+    void resetTable() {
+        root->resetScope(); // Preparation for new traversal
+    }
+
+    void printTable() {
+        if (root) {
+            root->printScopeTree(); // Call the correctly named method to print the scope tree
+        }
+    }
+
+    void printRoot() {
+        root->printScope();
+    }
+
+    void printCurrentScope() {
+        current->printScope();
+    }
+
+    void generateST() {
+        resetTable();
+        std::ofstream outStream("st.dot");
+
+        outStream << "digraph ScopeTree {\n";
+        int nodeId = 0;
+        root->generateDotGraph(outStream, nodeId);
+        outStream << "}\n";
+
+        outStream.close();
+        std::cout << "\nBuilt a symbol-table-tree at st.dot. Use 'make st' to generate the pdf version.\n\n";
+    }
+
+    void addLog(int lineno, const std::string& errorMsg) {
+        semanticErrors.append("\t@error at line " + std::to_string(lineno) + ". " + errorMsg + ".\n");
+    }
+
+    std::string getLog() const {
+        return semanticErrors;
     }
 };
