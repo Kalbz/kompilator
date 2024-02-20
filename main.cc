@@ -1,5 +1,7 @@
 #include<iostream>
 #include "parser.tab.hh"
+#include "Node.h"
+#include "ASTTraversal.h" // Include the AST traversal functionality
 
 extern Node* root;
 extern FILE* yyin;
@@ -28,14 +30,19 @@ int main(int argc, char **argv)
   else {
     yy::parser parser;
 
-  if(!parser.parse() && !lexical_errors) {
-
-    printf("\nThe compiler successfuly generated a syntax tree for the given input! \n");
-  
-    printf("\nPrint Tree:  \n");
-    root->print_tree();
-    root->generate_tree();
-  }
+    if (!parser.parse() && !lexical_errors) {
+        printf("\nThe compiler successfully generated a syntax tree for the given input! \n");
+        root->print_tree();
+        root->generate_tree();
+        
+        // Perform semantic analysis
+        SymbolTable symbolTable;
+        traverseAST(root, symbolTable); // Now using the separated traversal function
+        
+        // For demonstration: Print the symbol table after traversal
+        printf("\nSymbol Table: \n");
+        symbolTable.printTable();
+    }
     }
   
   return 0;
