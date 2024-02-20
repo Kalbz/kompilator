@@ -1,3 +1,6 @@
+#ifndef SYMBOLTABLE_H
+#define	SYMBOLTABLE_H
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -5,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <algorithm>
+#include <iostream> 
 
 
 
@@ -157,6 +161,10 @@ public:
         return parentScope.lock();
     }
 
+    std::string getName() const {
+        return name;
+    }
+
     void printScope(const std::string& tab = "") const {
         for (const auto& record : records) {
             std::cout << tab << "Name: " << record.first << "; Record: " << record.second->getType() << "; Type: " << record.second->getId() << std::endl;
@@ -217,18 +225,22 @@ public:
     SymbolTable() : root(std::make_shared<Scope>(nullptr, "", "Program")), current(root) {}
 
     void enterScope(const std::string& n = "", const std::string& t = "") {
+        std::cout << "Entering Scope: Name = " << n << ", Type = " << t << "\n";
         current = current->nextChild(n, t);
     }
 
     void exitScope() {
         if (auto parent = current->getParent()) {
+            std::cout << "Exiting Scope: " << current->getName() << "\n";
             current = parent;
         }
     }
 
     void put(const std::string& key, std::shared_ptr<Record> item) {
+        std::cout << "Adding Symbol: " << key << " to Scope: " << current->getName() << "\n";
         current->addRecord(key, item);
     }
+
 
     std::shared_ptr<Record> lookup(const std::string& key) {
         return current->lookup(key);
@@ -288,3 +300,5 @@ public:
         return semanticErrors;
     }
 };
+
+#endif
