@@ -10,8 +10,6 @@
 #include <algorithm>
 #include <iostream> 
 
-
-
 class Record {
 private:
     std::string id;
