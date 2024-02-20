@@ -6,5 +6,5 @@
 
 // Declare the traverseAST function
 void traverseAST(Node* node, SymbolTable& symbolTable);
-
+void traverseASTAndPopulateSymbolTable(Node* node, SymbolTable& symbolTable);
 #endif // ASTTRAVERSAL_H

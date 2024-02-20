@@ -37,8 +37,8 @@ int main(int argc, char **argv)
         
         // Perform semantic analysis
         SymbolTable symbolTable;
-        traverseAST(root, symbolTable); // Now using the separated traversal function
-        
+        //traverseAST(root, symbolTable); // Now using the separated traversal function
+        traverseASTAndPopulateSymbolTable(root, symbolTable);
         // For demonstration: Print the symbol table after traversal
         printf("\nSymbol Table: \n");
         symbolTable.printTable();
