@@ -162,7 +162,7 @@ MethodDeclaration: PUBLIC type identifier LP RP LCB body RCB {
  
             }
             | PUBLIC type identifier LP ParameterList RP LCB body RCB {
-                            $$ = new Node("methodDeclaration", "", yylineno);
+                            $$ = new Node("MethodDeclaration", "", yylineno);
                             $$->children.push_back($2);
                             $$->children.push_back($3);
                             $$->children.push_back($5);

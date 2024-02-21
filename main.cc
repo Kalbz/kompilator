@@ -1,49 +1,44 @@
-#include<iostream>
+#include <iostream>
 #include "parser.tab.hh"
 #include "Node.h"
-#include "ASTTraversal.h" // Include the AST traversal functionality
 
-extern Node* root;
-extern FILE* yyin;
+extern Node *root;
+extern FILE *yyin;
 extern int yylineno;
 extern int lexical_errors;
 extern yy::parser::symbol_type yylex();
 
-void yy::parser::error(std::string const&err)
-{ 
-  printf("Syntax errors found! See the logs below: \n");
-  fprintf(stderr, "@error at line %d. Cannot generate a syntax for this input: %s\n", yylineno, err.c_str()); 
+void yy::parser::error(std::string const &err)
+{
+	printf("Syntax errors found! See the logs below: \n");
+	fprintf(stderr, "@error at line %d. Cannot generate a syntax for this input: %s\n", yylineno, err.c_str());
 }
 
 int main(int argc, char **argv)
 {
-  //Reads from file if a file name is passed as an argument. Otherwise, reads from stdin.
-  if(argc > 1) {
-    if(!(yyin = fopen(argv[1], "r"))) {
-      perror(argv[1]);
-      return 1;
-    }
-  }
-  //
-  if(USE_LEX_ONLY) 
-    yylex();
-  else {
-    yy::parser parser;
+	// Reads from file if a file name is passed as an argument. Otherwise, reads from stdin.
+	if (argc > 1)
+	{
+		if (!(yyin = fopen(argv[1], "r")))
+		{
+			perror(argv[1]);
+			return 1;
+		}
+	}
+	//
+	if (USE_LEX_ONLY)
+		yylex();
+	else
+	{
+		yy::parser parser;
 
-    if (!parser.parse() && !lexical_errors) {
-        printf("\nThe compiler successfully generated a syntax tree for the given input! \n");
-        root->print_tree();
-        root->generate_tree();
-        
-        // Perform semantic analysis
-        SymbolTable symbolTable;
-        //traverseAST(root, symbolTable); // Now using the separated traversal function
-        traverseASTAndPopulateSymbolTable(root, symbolTable);
-        // For demonstration: Print the symbol table after traversal
-        printf("\nSymbol Table: \n");
-        symbolTable.printTable();
-    }
-    }
-  
-  return 0;
+		if (!parser.parse() && !lexical_errors)
+		{
+			printf("\nThe compiler successfully generated a syntax tree for the given input! \n");
+			root->print_tree();
+			root->generate_tree();
+		}
+	}
+
+	return 0;
 }
