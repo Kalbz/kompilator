@@ -1,5 +1,5 @@
-#ifndef VARIABLE_H
-#define VARIABLE_H
+#ifndef SYMBOLTABLE_H
+#define SYMBOLTABLE_H
 
 #include <iostream>
 #include <string>
