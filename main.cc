@@ -1,4 +1,5 @@
 #include <iostream>
+#include "traversal.hpp"
 #include "parser.tab.hh"
 #include "Node.h"
 
@@ -25,7 +26,6 @@ int main(int argc, char **argv)
 			return 1;
 		}
 	}
-	//
 	if (USE_LEX_ONLY)
 		yylex();
 	else
@@ -37,8 +37,13 @@ int main(int argc, char **argv)
 			printf("\nThe compiler successfully generated a syntax tree for the given input! \n");
 			root->print_tree();
 			root->generate_tree();
+
+			SymbolTable symbolTable;
+			astTraversal(symbolTable, root);
+			symbolTable.printTable();
 		}
 	}
+
 
 	return 0;
 }
