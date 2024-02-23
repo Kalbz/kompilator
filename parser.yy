@@ -155,14 +155,14 @@ VarDeclaration: type identifier SEMICOLON {
             ;
 
 MethodDeclaration: PUBLIC type identifier LP RP LCB body RCB {
-                            $$ = new Node("MethodDeclaration", "", yylineno);
+                            $$ = new MethodDeclaration("MethodDeclaration", "", yylineno);
                             $$->children.push_back($2);
                             $$->children.push_back($3);
                             $$->children.push_back($7);
  
             }
             | PUBLIC type identifier LP ParameterList RP LCB body RCB {
-                            $$ = new Node("MethodDeclaration", "", yylineno);
+                            $$ = new MethodDeclaration("MethodDeclaration", "", yylineno);
                             $$->children.push_back($2);
                             $$->children.push_back($3);
                             $$->children.push_back($5);
@@ -193,7 +193,7 @@ Parameter: type identifier{
 ;
 
 body: return {
-                          $$ = new Node("Body", "", yylineno);
+                          $$ = new Body("Body", "", yylineno);
                           $$->children.push_back($1);
       }
       | StatementVars return {
@@ -211,7 +211,7 @@ return: RETURN expression SEMICOLON {
 
 
 StatementVars: vs {
-                    $$ = new Node("Body", "", yylineno) ;
+                    $$ = new Body("Body", "", yylineno) ;
                     $$->children.push_back($1);
               }
               | StatementVars vs {

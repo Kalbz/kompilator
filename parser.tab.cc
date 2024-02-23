@@ -1094,7 +1094,7 @@ namespace yy {
   case 22: // MethodDeclaration: PUBLIC type identifier LP RP LCB body RCB
 #line 157 "parser.yy"
                                                              {
-                            yylhs.value.as < Node * > () = new Node("MethodDeclaration", "", yylineno);
+                            yylhs.value.as < Node * > () = new MethodDeclaration("MethodDeclaration", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[6].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[5].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
@@ -1106,7 +1106,7 @@ namespace yy {
   case 23: // MethodDeclaration: PUBLIC type identifier LP ParameterList RP LCB body RCB
 #line 164 "parser.yy"
                                                                       {
-                            yylhs.value.as < Node * > () = new Node("MethodDeclaration", "", yylineno);
+                            yylhs.value.as < Node * > () = new MethodDeclaration("MethodDeclaration", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[7].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[6].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[4].value.as < Node * > ());
@@ -1148,7 +1148,7 @@ namespace yy {
   case 27: // body: return
 #line 195 "parser.yy"
              {
-                          yylhs.value.as < Node * > () = new Node("Body", "", yylineno);
+                          yylhs.value.as < Node * > () = new Body("Body", "", yylineno);
                           yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
       }
 #line 1155 "parser.tab.cc"
@@ -1176,7 +1176,7 @@ namespace yy {
   case 30: // StatementVars: vs
 #line 213 "parser.yy"
                   {
-                    yylhs.value.as < Node * > () = new Node("Body", "", yylineno) ;
+                    yylhs.value.as < Node * > () = new Body("Body", "", yylineno) ;
                     yylhs.value.as < Node * > ()->children.push_back(yystack_[0].value.as < Node * > ());
               }
 #line 1183 "parser.tab.cc"

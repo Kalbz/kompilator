@@ -63,6 +63,7 @@ public:
         {
             for (unsigned int i = 0; i < children.size(); i++)
             {
+                cout << "Executing " << children[i]->type << " " << children[i]->value << endl;
                 if (children[i] != nullptr)
                 {
                     children[i]->execute(symbolTable);
@@ -90,5 +91,40 @@ public:
         }
     }
 };
+
+class MethodDeclaration : public Node
+{
+public:
+    using Node::Node;
+    MethodDeclaration(string t, string v, int l) : Node(t, v, l) {}
+    string execute(SymbolTable &symbolTable) override
+    {
+        if (children.size() >= 3)
+        {
+            symbolTable.enterScope();
+            std::string methodType = children[0]->value;
+            std::string methodIdentifier = children[1]->value;
+            std::cout << "MethodDeclaration encountered: Identifier=" << methodIdentifier << ", Type=" << methodType << std::endl;
+            Method method(methodIdentifier, methodType);
+            symbolTable.put(methodIdentifier, method);
+            children[2]->execute(symbolTable);
+            symbolTable.exitScope();
+            
+        }
+    }
+};
+
+class Body : public Node
+{
+
+public:
+    using Node::Node;
+    Body(string t, string v, int l) : Node(t, v, l) {}
+    string execute(SymbolTable &symbolTable) override
+    {
+        Node::execute(symbolTable);
+    }
+};
+
 
 #endif // NODE_H
