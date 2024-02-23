@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "SymbolTable.hpp" // Include the SymbolTable definition
+#include "SymbolTable.hpp"
 
 using namespace std;
 
