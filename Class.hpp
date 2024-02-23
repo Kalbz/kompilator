@@ -21,6 +21,12 @@ class Class : public Record
         this->setType("Class");
     }
 
+    Class(std::string name, std::string type)
+    {
+        this->setId(name);
+        this->setType(type);
+    }
+
     void addVariable(std::string name, std::string type)
     {
         Variable v(name, type);

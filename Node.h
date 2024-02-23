@@ -15,7 +15,7 @@ class Node {
 public:
     int id, lineno;
     string type, value;
-    list<Node*> children;
+    std::vector<Node*> children;
     
     Node(string t, string v, int l) : type(t), value(v), lineno(l) {}
     Node() : type("uninitialised"), value("uninitialised"), lineno(0) {} // Bison needs this.

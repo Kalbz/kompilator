@@ -147,7 +147,7 @@ MethodDeclarationList: MethodDeclaration {
                                 }
                       ;
 VarDeclaration: type identifier SEMICOLON {
-                            $$ = new Node("VarDeclaration", " ", yylineno);
+                            $$ = new Node("VarDeclaration", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($2);
                             

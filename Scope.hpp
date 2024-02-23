@@ -17,11 +17,14 @@ private:
 
 public:
     // Constructor for root scope
-    Scope() {}
+    Scope() {
+        std::cout << "Creating root scope." << std::endl;
+    }
 
     // Constructor for child scope
-    explicit Scope(Scope *parent) : parentScope(parent) {}
-
+    explicit Scope(Scope *parent) : parentScope(parent) {
+        std::cout << "Creating child scope. Parent: " << parent << std::endl;
+    }
     // // Prevent copying
     // Scope(const Scope &) = delete;
     // Scope &operator=(const Scope &) = delete;
@@ -87,10 +90,13 @@ public:
 
     
     void put(std::string key, Record value) {
+        std::cout << "Adding symbol to scope: " << key << std::endl;
         records[key] = new Record(value);
     }
 
+
     void printScope(){
+        std::cout << "Printing scope. Records count: " << records.size() << std::endl;
         for (auto& pair : records)
         {
             std::cout << "ID: " << pair.second->getId() << " Type: " << pair.second->getType() << std::endl;

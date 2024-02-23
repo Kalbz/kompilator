@@ -40,6 +40,8 @@ int main(int argc, char **argv)
 
 			SymbolTable symbolTable;
 			astTraversal(symbolTable, root);
+			std::cout << "Symbol Table: " << std::endl;
+			
 			symbolTable.printTable();
 		}
 	}
