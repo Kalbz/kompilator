@@ -1083,7 +1083,7 @@ namespace yy {
   case 21: // VarDeclaration: type identifier SEMICOLON
 #line 149 "parser.yy"
                                           {
-                            yylhs.value.as < Node * > () = new Node("VarDeclaration", " ", yylineno);
+                            yylhs.value.as < Node * > () = new VarDeclaration("VarDeclaration", "", yylineno);
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[2].value.as < Node * > ());
                             yylhs.value.as < Node * > ()->children.push_back(yystack_[1].value.as < Node * > ());
                             

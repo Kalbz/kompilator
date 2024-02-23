@@ -33,17 +33,17 @@ int main(int argc, char **argv)
 		yy::parser parser;
 
 		if (!parser.parse() && !lexical_errors)
-		{
+		
 			printf("\nThe compiler successfully generated a syntax tree for the given input! \n");
 			root->print_tree();
 			root->generate_tree();
-
 			SymbolTable symbolTable;
-			astTraversal(symbolTable, root);
+			root->execute(symbolTable);
+			// astTraversal(symbolTable, root);
 			std::cout << "Symbol Table: " << std::endl;
-			
+
 			symbolTable.printTable();
-		}
+		
 	}
 
 

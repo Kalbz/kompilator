@@ -1,4 +1,4 @@
-#include "SymbolTable.hpp"
-#include "Node.h"
+// #include "SymbolTable.hpp"
+// #include "Node.h"
 
-void astTraversal(SymbolTable& symbolTable, Node* node);
+// void astTraversal(SymbolTable& symbolTable, Node* node);
