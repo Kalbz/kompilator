@@ -10,6 +10,8 @@
 class Scope
 {
 private:
+    std::string name;
+    std::string type;
     Scope *parentScope = nullptr;
     std::vector<Scope *> childScopes;
     std::map<std::string, Record*> records;
@@ -18,11 +20,14 @@ private:
 public:
     // Constructor for root scope
     Scope() {
+        name = "root";
         std::cout << "Creating root scope." << std::endl;
     }
 
+
+
     // Constructor for child scope
-    explicit Scope(Scope *parent) : parentScope(parent) {
+    explicit Scope(Scope *parent, std::string name, std::string type) : parentScope(parent), name(name), type(type) {
         std::cout << "Creating child scope. Parent: " << parent << std::endl;
     }
     // // Prevent copying
@@ -40,22 +45,28 @@ public:
     }
 
 
-    // Function to create or return the next child scope
-    Scope *nextChild()
-    {
-        Scope *nextChild;
-        if (next >= childScopes.size())
-        {
-            nextChild = new Scope(this);
-            childScopes.push_back(nextChild);
-        }
-        else
-        {
-            nextChild = childScopes[next];
-        }
-        next++;
-        return nextChild;
+    // // Function to create or return the next child scope
+    // Scope *nextChild(std::string name, std::string type)
+    // {
+    //     Scope *nextChild;
+    //     if (next >= childScopes.size())
+    //     {
+    //         nextChild = new Scope(this, name, type);
+    //         childScopes.push_back(nextChild);
+    //     }
+    //     else
+    //     {
+    //         nextChild = childScopes[next];
+    //     }
+    //     next++;
+    //     return nextChild;
+    // }
+    Scope* createChildScope(std::string name, std::string type) {
+        Scope* newScope = new Scope(this, name, type);
+        childScopes.push_back(newScope);
+        return newScope;
     }
+
 
     Record lookup(std::string key){
         auto it = records.find(key);
@@ -88,6 +99,13 @@ public:
         }
     }
 
+    std::string getName() const {
+        return name;
+    }
+
+    std::string getType() const {
+        return type;
+    }
     
     void put(std::string key, Record value) {
         std::cout << "Adding symbol to scope: " << key << std::endl;
@@ -107,6 +125,32 @@ public:
         }
     }
 
+
+
+void generateDotContent(std::ostream &out, int &nodeCount) const {
+    int currentNode = nodeCount++;
+    // Print the current node with its label
+    out << "n" << currentNode << " [label=\"Scope: " << this->getName() << "(of type: " << this->getType() << ") Records count: " << records.size() << "\"];\n";
+    
+    // Print records for the current scope (if you want to include record details in the graph)
+    for (const auto& pair : records) {
+        out << "n" << currentNode << " -> " << "r" << nodeCount << " [label=\"" << pair.first << "\"];\n";
+        out << "r" << nodeCount << " [shape=record, label=\"{" << pair.first << "|ID: " << pair.second->getId() << "|Type: " << pair.second->getType() << "}\"];\n";
+        nodeCount++;
+    }
+
+    // Recursively print child scopes
+    for (const auto child : childScopes) {
+        int childNode = nodeCount;
+        child->generateDotContent(out, nodeCount);
+        // Draw edge to child node
+        out << "n" << currentNode << " -> n" << childNode << ";\n";
+    }
+}
+
 };
+
+
+
 
 #endif

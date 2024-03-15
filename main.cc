@@ -38,7 +38,11 @@ int main(int argc, char **argv)
 			root->print_tree();
 			root->generate_tree();
 			SymbolTable symbolTable;
+			
 			root->execute(symbolTable);
+			symbolTable.generateGraphviz("symbol_table.dot");
+			
+
 			// astTraversal(symbolTable, root);
 			std::cout << "Symbol Table: " << std::endl;
 

@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include "SymbolTable.hpp" // Include the SymbolTable definition
+#include "Class.hpp"
 
 using namespace std;
 
@@ -29,6 +30,15 @@ public:
         for (auto i = children.begin(); i != children.end(); i++)
             (*i)->print_tree(depth + 1);
     }
+
+    // void print_tree(int depth = 0) {
+    //     for (int i = 0; i < depth; i++)
+    //         cout << "  ";
+    //     cout << type << ":" << value << endl;
+    //     for (auto child : children)
+    //         if (child != nullptr) child->print_tree(depth + 1);
+    // }
+
 
     void generate_tree()
     {
@@ -59,6 +69,8 @@ public:
 
     virtual string execute(SymbolTable &symbolTable)
     {
+        std::string result = "";
+
         if (!children.empty())
         {
             for (unsigned int i = 0; i < children.size(); i++)
@@ -70,7 +82,7 @@ public:
                 }
             }
         }
-        return "";
+        return result;
     }
 };
 
@@ -81,15 +93,19 @@ public:
     VarDeclaration(string t, string v, int l) : Node(t, v, l) {}
     string execute(SymbolTable &symbolTable) override
     {
+        std::string result = "";
         if (children.size() >= 2)
         {
             std::string varType = children[0]->value;
             std::string varIdentifier = children[1]->value;
+
             std::cout << "VarDeclaration encountered: Identifier=" << varIdentifier << ", Type=" << varType << std::endl;
             Variable var(varIdentifier, varType);
             symbolTable.put(varIdentifier, var);
         }
+        return result;
     }
+
 };
 
 class MethodDeclaration : public Node
@@ -99,32 +115,100 @@ public:
     MethodDeclaration(string t, string v, int l) : Node(t, v, l) {}
     string execute(SymbolTable &symbolTable) override
     {
+        std::string result = "";
         if (children.size() >= 3)
         {
-            symbolTable.enterScope();
+            
             std::string methodType = children[0]->value;
             std::string methodIdentifier = children[1]->value;
+            symbolTable.enterScope(methodIdentifier, methodType);
             std::cout << "MethodDeclaration encountered: Identifier=" << methodIdentifier << ", Type=" << methodType << std::endl;
             Method method(methodIdentifier, methodType);
             symbolTable.put(methodIdentifier, method);
+
             children[2]->execute(symbolTable);
+            if (children.size() == 4)
+            {
+                children[3]->execute(symbolTable);
+            }
             symbolTable.exitScope();
             
         }
+        return result;
     }
 };
 
-class Body : public Node
+class ClassDeclaration : public Node
 {
-
 public:
     using Node::Node;
-    Body(string t, string v, int l) : Node(t, v, l) {}
+    ClassDeclaration(string t, string v, int l) : Node(t, v, l) {}
     string execute(SymbolTable &symbolTable) override
     {
-        Node::execute(symbolTable);
+        std::string result = "";
+        if (children.size() == 2)
+        {
+            std::string classIdentifier = children[0]->value;
+            symbolTable.enterScope(classIdentifier, "Class");
+            std::cout << "ClassDeclaration encountered: Identifier=" << classIdentifier << std::endl;
+            Class classObj(classIdentifier);
+            symbolTable.put(classIdentifier, classObj);
+
+            children[1]->execute(symbolTable);
+            symbolTable.exitScope();
+        }
+        else if (children.size() == 3)
+        {
+            std::string classIdentifier = children[0]->value;
+            std::string classExtends = children[1]->value;
+            symbolTable.enterScope(classIdentifier, "Class");
+            std::cout << "ClassDeclaration encountered: Identifier=" << classIdentifier << std::endl;
+            Class classObj(classIdentifier, classExtends);
+            symbolTable.put(classIdentifier, classObj);
+            children[1]->execute(symbolTable);
+            children[2]->execute(symbolTable);
+            symbolTable.exitScope();
+
+        }
+        return result;
     }
 };
+
+class Parameter : public Node
+{
+public:
+    using Node::Node;
+    Parameter(string t, string v, int l) : Node(t, v, l) {}
+    string execute(SymbolTable &symbolTable) override
+    {
+        std::string result = "";
+        if (children.size() >= 2)
+        {
+            children[0]->execute(symbolTable);
+            children[1]->execute(symbolTable);
+            std::string varType = children[0]->value;
+            std::string varIdentifier = children[1]->value;
+
+            std::cout << "Parameter encountered: Identifier=" << varIdentifier << ", Type=" << varType << std::endl;
+            Variable var(varIdentifier, varType);
+            symbolTable.put(varIdentifier, var);
+        }
+        return result;
+    }
+};
+// class Body : public Node
+// {
+
+// public:
+//     using Node::Node;
+//     Body(string t, string v, int l) : Node(t, v, l) {}
+//     string execute(SymbolTable &symbolTable) override
+//     {
+//         Node::execute(symbolTable);
+//     }
+// };
+
 
 
 #endif // NODE_H
+

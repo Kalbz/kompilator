@@ -40,7 +40,7 @@
 %nonassoc ELSE
 
 // definition of the production rules. All production rules are of type Node
-%type <Node *> root Goal MainClass expression VarDeclaration VarDeclarationList MethodDeclaration statement ClassDeclaration MethodDeclarationList ClassDeclarationList StatementList Parameter ParameterList body return Index ExtendedFunc Argumentlist IfStatement ElseStatement type StatementVars Arg MainBody void main vs Methods factor identifier
+%type <Node *> root Goal MainClass expression VarDeclaration VarDeclarationList MethodDeclaration statement ClassDeclaration MethodDeclarationList ClassDeclarationList StatementList Parameter ParameterList body return Index ExtendedFunc Argumentlist IfStatement ElseStatement type StatementVars Arg MainBody void main vs MainMethod factor identifier
 
 
 
@@ -72,15 +72,15 @@ ClassDeclarationList: ClassDeclaration {
                           }
     ;
 
-MainClass: PUBLIC CLASS identifier LCB Methods RCB {
-                            $$ = new Node("MainClass", "", yylineno);
+MainClass: PUBLIC CLASS identifier LCB MainMethod RCB {
+                            $$ = new ClassDeclaration("MainClass", "", yylineno);
                             $$->children.push_back($3);
                             $$->children.push_back($5);
                           }  
     ;
 
-Methods: PUBLIC STATIC void main Arg MainBody {
-                            $$ = new Node("Method", "", yylineno);
+MainMethod: PUBLIC STATIC void main Arg MainBody {
+                            $$ = new Node("MainMethod", "", yylineno);
                             $$->children.push_back($3);
                             $$->children.push_back($4);
                             $$->children.push_back($5);
@@ -105,21 +105,21 @@ Arg: LP STRING_KEYWORD LB RB identifier RP {
 
 
 ClassDeclaration: CLASS identifier LCB  RCB {
-                            $$ = new Node("ClassDeclaration", "", yylineno);
+                            $$ = new ClassDeclaration("ClassDeclaration", "", yylineno);
                             $$->children.push_back($2);
             }
             | CLASS identifier LCB VarDeclarationList RCB {
-                            $$ = new Node("ClassDeclaration", "", yylineno);
+                            $$ = new ClassDeclaration("ClassDeclaration", "", yylineno);
                             $$->children.push_back($2);
                             $$->children.push_back($4);
             }
             | CLASS identifier LCB MethodDeclarationList RCB {
-                            $$ = new Node("ClassDeclaration", "", yylineno);
+                            $$ = new ClassDeclaration("ClassDeclaration", "", yylineno);
                             $$->children.push_back($2);
                             $$->children.push_back($4);
             }
             | CLASS identifier LCB VarDeclarationList MethodDeclarationList RCB {
-                            $$ = new Node("ClassDeclaration", "", yylineno);
+                            $$ = new ClassDeclaration("ClassDeclaration", "", yylineno);
                             $$->children.push_back($2);
                             $$->children.push_back($4);
                             $$->children.push_back($5);
@@ -127,7 +127,7 @@ ClassDeclaration: CLASS identifier LCB  RCB {
             ;
 
 VarDeclarationList: VarDeclaration { 
-                                $$ = new Node("VarDeclarationList", "", yylineno); 
+                                $$ = new Node("VarDeclarations", "", yylineno); 
                                 $$->children.push_back($1); 
                                 }
               | VarDeclarationList VarDeclaration { 
@@ -138,7 +138,7 @@ VarDeclarationList: VarDeclaration {
 
 
 MethodDeclarationList: MethodDeclaration { 
-                                $$ = new Node("MethodDeclarationList", "", yylineno); 
+                                $$ = new Node("MethodDeclarations", "", yylineno); 
                                 $$->children.push_back($1);
                                 }
                       | MethodDeclarationList MethodDeclaration { 
@@ -185,7 +185,7 @@ ParameterList: Parameter{
     ;
 
 Parameter: type identifier{
-                                $$ = new Node("Parameter", "", yylineno);
+                                $$ = new Parameter("Parameter", "", yylineno);
                                 $$->children.push_back($1);
                                 $$->children.push_back($2);
 
@@ -193,7 +193,7 @@ Parameter: type identifier{
 ;
 
 body: return {
-                          $$ = new Body("Body", "", yylineno);
+                          $$ = new Node("Body", "", yylineno);
                           $$->children.push_back($1);
       }
       | StatementVars return {
@@ -211,7 +211,7 @@ return: RETURN expression SEMICOLON {
 
 
 StatementVars: vs {
-                    $$ = new Body("Body", "", yylineno) ;
+                    $$ = new Node("Body", "", yylineno) ;
                     $$->children.push_back($1);
               }
               | StatementVars vs {
