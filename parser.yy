@@ -40,7 +40,7 @@
 %nonassoc ELSE
 
 // definition of the production rules. All production rules are of type Node
-%type <Node *> root Goal MainClass expression VarDeclaration VarDeclarationList MethodDeclaration statement ClassDeclaration MethodDeclarationList ClassDeclarationList StatementList Parameter ParameterList body return Index ExtendedFunc Argumentlist IfStatement ElseStatement type StatementVars Arg MainBody void main vs MainMethod factor identifier
+%type <Node *> root Goal MainClass expression VarDeclaration VarDeclarationList MethodDeclaration statement ClassDeclaration MethodDeclarationList ClassDeclarationList StatementList Parameter ParameterList body return Index ExtendedFunc Argumentlist IfStatement ElseStatement type StatementVars Arg MainBody void main vs MainMethod factor identifier ArrayType AssignIndex
 
 
 
@@ -88,8 +88,8 @@ MainMethod: PUBLIC STATIC void main Arg MainBody {
 }
 ;
 
-main : MAIN { $$ = new Node("Name", $1, yylineno); } ;
-void : VOID { $$ = new Node("Type", $1, yylineno); } ;
+main : MAIN { $$ = new Identifier("Identifier", $1, yylineno); } ;
+void : VOID { $$ = new Type("Type", $1, yylineno); } ;
 
 
 MainBody: LCB statement RCB {
@@ -97,12 +97,17 @@ MainBody: LCB statement RCB {
                             $$->children.push_back($2);
 };
 
-Arg: LP STRING_KEYWORD LB RB identifier RP {
-                            $$ = new Node("Argument", $2 + $3 + $4, yylineno);
-                            $$->children.push_back($5);
+Arg: LP ArrayType identifier RP {
+                            $$ = new Parameter("Parameter", "", yylineno);
+                            $$->children.push_back($2);
+                            $$->children.push_back($3);
                           
 };
 
+ArrayType: STRING_KEYWORD LB RB { 
+                            $$ = new Type("ArrayType", $1 + $2 + $3, yylineno); 
+                            
+};
 
 ClassDeclaration: CLASS identifier LCB  RCB {
                             $$ = new ClassDeclaration("ClassDeclaration", "", yylineno);
@@ -203,7 +208,7 @@ body: return {
     ;
 
 return: RETURN expression SEMICOLON {
-                          $$ = new Node("Return", "", yylineno) ;
+                          $$ = new Return("Return", "", yylineno) ;
                           $$->children.push_back($2) ;
 
     }
@@ -222,8 +227,7 @@ StatementVars: vs {
 
 vs: VarDeclaration { $$ = $1 ;} | statement {$$ = $1;} ;
 
-type: BOOLEAN  { $$ = new Node("Type", $1, yylineno) ; } | INT_KEYWORD  { $$ = new Node("Type", $1, yylineno) ; } | IDENTIFIER { $$ = new Node("Type", $1, yylineno) ; } | INT_KEYWORD LB RB  { $$ = new Node("Type", $1 + $2 + $3, yylineno) ; } 
-/* type: BOOLEAN  {$$ = $1;} | INT_KEYWORD  {$$ = $1;} | IDENTIFIER{$$ = $1;} | INT_KEYWORD LB RB  {$$ = $1 + $2 + $3;}  */
+type: BOOLEAN  { $$ = new Type("Type", $1, yylineno) ; } | INT_KEYWORD  { $$ = new Type("Type", $1, yylineno) ; } | IDENTIFIER { $$ = new Type("Type", $1, yylineno) ; } | INT_KEYWORD LB RB  { $$ = new Type("Type", $1 + $2 + $3, yylineno) ; } 
     ;
 
 
@@ -236,18 +240,18 @@ statement: LCB RCB {
             | 
             
             IF LP expression RP IfStatement {
-                            $$ = new Node("IF", "", yylineno);
+                            $$ = new IfElseWhile("IF", "", yylineno);
                             $$->children.push_back($3);
                             $$->children.push_back($5);
             }
             | IF LP expression RP IfStatement ELSE ElseStatement {
-                            $$ = new Node("IF ELSE", "", yylineno);
+                            $$ = new IfElseWhile("IF ELSE", "", yylineno);
                             $$->children.push_back($3);
                             $$->children.push_back($5);
                             $$->children.push_back($7);
                           } 
             | WHILE LP expression RP IfStatement {
-                            $$ = new Node("WHILE", "", yylineno);
+                            $$ = new IfElseWhile("WHILE", "", yylineno);
                             $$->children.push_back($3);
                             $$->children.push_back($5);
             }
@@ -256,17 +260,23 @@ statement: LCB RCB {
                             $$->children.push_back($3);
             }
             | identifier ASSIGNOP expression SEMICOLON {
-                            $$ = new Node("Assignment", "", yylineno);
+                            $$ = new Assignment("Assignment", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($3);
             }
-            | identifier Index ASSIGNOP expression SEMICOLON {
-                            $$ = new Node("Assignment", "", yylineno);
+            | AssignIndex ASSIGNOP expression SEMICOLON {
+                            $$ = new Assignment("Assignment", "", yylineno);
                             $$->children.push_back($1);
-                            $$->children.push_back($2);
-                            $$->children.push_back($4);
+                            $$->children.push_back($3);
             }
             ;
+
+AssignIndex: identifier Index{
+                            $$ = new Index("Index", "", yylineno);
+                            $$->children.push_back($1);
+                            $$->children.push_back($2);
+
+} ;
 
 IfStatement: statement {
                             $$ = new Node("True", "", yylineno);
@@ -319,37 +329,37 @@ expression: expression PLUSOP expression {      /*
                             $$->children.push_back($3);
             }
             | expression ANDOP expression {
-                            $$ = new Node("AndOPExpression", "", yylineno);
+                            $$ = new BooleanExpression("AndOPExpression", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($3);
             }
             | expression OROP expression {
-                            $$ = new Node("OrOPExpression", "", yylineno);
+                            $$ = new BooleanExpression("OrOPExpression", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($3);
             }
             | expression LCHEV expression {
-                            $$ = new Node("LChevExpression", "", yylineno);
+                            $$ = new LessThanExpression("LChevExpression", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($3);
             }
             | expression RCHEV expression {
-                            $$ = new Node("RChevExpression", "", yylineno);
+                            $$ = new GreaterThanExpression("RChevExpression", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($3);
             }
             | expression EQOP expression {
-                            $$ = new Node("EqOpExpression", "", yylineno);
+                            $$ = new EqualExpression("EqOpExpression", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($3);
             }
             | expression Index {
-                            $$ = new Node("ExpressionLBExpressionRB", "", yylineno);
+                            $$ = new Index("Index", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($2);
             }
             | expression DOT LENGTH {
-                            $$ = new Node("ExpressionDotLength", "", yylineno);
+                            $$ = new Length("ExpressionDotLength", "", yylineno);
                             $$->children.push_back($1);
             }
 
@@ -359,15 +369,15 @@ expression: expression PLUSOP expression {      /*
                             $$->children.push_back($3);
             }
             | NEW INT_KEYWORD Index {
-                            $$ = new Node("New Int", "", yylineno);
+                            $$ = new IntArray("New Int", "", yylineno);
                             $$->children.push_back($3);
             }
             | NEW identifier LP RP {
-                            $$ = new Node("New", "", yylineno);
+                            $$ = new New("New", "", yylineno);
                             $$->children.push_back($2);
             }
             | NOTOP expression {
-                            $$ = new Node("Not Equal", "", yylineno);
+                            $$ = new NotExpression("Not Equal", "", yylineno);
                             $$->children.push_back($2);
             }
             | factor {$$ = $1; /* printf("r4 ");*/}
@@ -392,7 +402,7 @@ Index : LB expression RB {
     ;
 
 Argumentlist: expression {
-                            $$ = new Node("Arguments", "", yylineno);
+                            $$ = new Arguments("Arguments", "", yylineno);
                             $$->children.push_back($1);
                           } 
             | Argumentlist COMMA expression {
@@ -404,12 +414,12 @@ Argumentlist: expression {
 
 
 
-factor:     INT           {  $$ = new Node("Int", $1, yylineno); }
+factor:     INT           {  $$ = new IntFactor("Int", $1, yylineno); }
             | identifier  {  $$ = $1; }
-            | TRUE        {  $$ = new Node("True", $1, yylineno); }
-            | FALSE       {  $$ = new Node("False", $1, yylineno); }
-            | THIS        {  $$ = new Node("This", $1, yylineno); }
+            | TRUE        {  $$ = new BooleanFactor("Boolean", $1, yylineno); }
+            | FALSE       {  $$ = new BooleanFactor("Boolean", $1, yylineno); }
+            | THIS        {  $$ = new ClassFactor("Class", $1, yylineno); }
             | LP expression RP { $$ = $2; }
     ;
 
-identifier: IDENTIFIER { $$ = new Node("ID/Name", $1, yylineno) ; } ;
+identifier: IDENTIFIER { $$ = new Identifier("Identifier", $1, yylineno) ; } ;

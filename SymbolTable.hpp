@@ -42,6 +42,9 @@ public:
         }
     }
 
+    Scope* getCurrentScope(){
+        return this->current;
+    }
 
     void put(std::string key, Record value){
         current->put(key, value);

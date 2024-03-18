@@ -41,10 +41,14 @@ public:
     {
         this->type = type;
     }
+    bool isValid() const {
+        return id != "uninitialised" && type != "uninitialised";
+    }
 
     void printRecord()
     {
         std::cout << "ID: " << this->id << " Type: " << this->type << std::endl;
     }
+
 };
 #endif

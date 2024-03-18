@@ -18,6 +18,8 @@ public:
     int id, lineno;
     string type, value;
     std::vector<Node *> children;
+    std::string lhsType;
+    std::string rhsType;
 
     Node(string t, string v, int l) : type(t), value(v), lineno(l) {}
     Node() : type("uninitialised"), value("uninitialised"), lineno(0) {} // Bison needs this.
@@ -84,10 +86,36 @@ public:
         }
         return result;
     }
+
+    virtual std::string performSemanticAnalysis(SymbolTable &symbolTable)
+    {
+        std::string result = "";
+
+        if (!children.empty())
+        {
+            for (unsigned int i = 0; i < children.size(); i++)
+            {
+                children[i]->performSemanticAnalysis(symbolTable);
+            }
+        }
+        return result;
+    }
+
+    virtual std::string performSemanticAnalysisFromRoot(SymbolTable &SymbolTable){
+        return "";
+    
+    }
+    
+    virtual std::vector<std::string> getArgument(SymbolTable& symbolTable){
+        }
 };
 
 class VarDeclaration : public Node
 {
+
+private:
+    std::string returnType;
+    std::string name;
 public:
     using Node::Node;
     VarDeclaration(string t, string v, int l) : Node(t, v, l) {}
@@ -105,7 +133,24 @@ public:
         }
         return result;
     }
+		string performSemanticAnalysis(SymbolTable& symbolTable) override {
 
+			returnType = children[0]->performSemanticAnalysis(symbolTable); //type
+            std::cout << returnType << " is the return type" << std::endl;
+			name = children[1]->performSemanticAnalysis(symbolTable); //identiier
+
+			if(returnType == "int" || returnType == "boolean" || returnType == "int[]" || returnType == "String[]"){
+			} else {
+                try {
+                    symbolTable.lookup(returnType);
+                    // If lookup is successful, no action needed.
+                } catch (const std::runtime_error& e) {
+                    // If an exception is caught, the record was not found.
+                    std::cout << "Error: Type " << returnType << " not found" << std::endl;
+                }
+            }
+            return "";
+        }
 };
 
 class MethodDeclaration : public Node
@@ -136,6 +181,16 @@ public:
         }
         return result;
     }
+    string performSemanticAnalysis(SymbolTable& symbolTable) override {
+        symbolTable.enterScope(children[1]->value, children[0]->value);
+        children[2]->performSemanticAnalysis(symbolTable);
+        if (children.size() == 4)
+        {
+            children[3]->performSemanticAnalysis(symbolTable);
+        }
+        symbolTable.exitScope();
+        return "";
+        }
 };
 
 class ClassDeclaration : public Node
@@ -172,6 +227,12 @@ public:
         }
         return result;
     }
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+        symbolTable.enterScope(children[0]->value, "Class");
+        children[1]->performSemanticAnalysis(symbolTable);
+        symbolTable.exitScope();
+        return "";
+		}
 };
 
 class Parameter : public Node
@@ -196,17 +257,330 @@ public:
         return result;
     }
 };
-// class Body : public Node
-// {
 
-// public:
-//     using Node::Node;
-//     Body(string t, string v, int l) : Node(t, v, l) {}
-//     string execute(SymbolTable &symbolTable) override
-//     {
-//         Node::execute(symbolTable);
-//     }
+class IntExpression : public Node{
+
+	public:
+		using Node::Node;
+		string performSemanticAnalysis(SymbolTable& symbolTable) override {
+			lhsType = children[0]->performSemanticAnalysis(symbolTable);
+			rhsType = children[1]->performSemanticAnalysis(symbolTable);
+			if((lhsType != "int") || (rhsType != "int")){
+                std::cout << "Types are not the same" << std::endl;
+			}
+			return "int";
+		}
+};
+
+
+class BooleanExpression : public Node{
+
+	public:
+		using Node::Node;
+		string performSemanticAnalysis(SymbolTable& symbolTable) override {
+			lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            std::cout << lhsType << " is the left hand side type" << std::endl;
+			rhsType = children[1]->performSemanticAnalysis(symbolTable);
+            std::cout << rhsType << " is the right hand side type" << std::endl;
+			if((lhsType != "boolean") || (rhsType != "boolean")){
+                std::cout << lhsType << ":Types are not the same:" << rhsType << std::endl;	
+            }
+			return "boolean";
+		}
+};
+
+class EqualExpression : public Node{
+
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            rhsType = children[1]->performSemanticAnalysis(symbolTable);
+            if(lhsType != rhsType){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "boolean";
+        }
+};
+
+class LessThanExpression : public Node{
+
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            rhsType = children[1]->performSemanticAnalysis(symbolTable);
+            if((lhsType != "int") || (rhsType != "int")){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "boolean";
+        }
+};
+
+class GreaterThanExpression : public Node{
+
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            rhsType = children[1]->performSemanticAnalysis(symbolTable);
+            if((lhsType != "int") || (rhsType != "int")){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "boolean";
+        }
+};
+
+class NotExpression : public Node{
+
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            if(lhsType != "boolean"){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "boolean";
+        }
+};
+
+class New : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+			lhsType = children[0]->performSemanticAnalysisFromRoot(symbolTable);
+			return lhsType;
+        }
+};
+
+class Length : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            if(lhsType != "int[]"){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "int";
+        }
+};
+
+
+class Type : public Node{
+    public:
+        using Node::Node;
+        string execute(SymbolTable &symbolTable) override {
+            return this->value;
+        }
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            std::cout << "This is what im testing type right now: " << this->value << std::endl;
+            return this->value;
+        }
+};
+
+class Identifier : public Node {
+public:
+    using Node::Node;
+
+    string execute(SymbolTable &symbolTable) override {
+        return this->value;
+    }
+
+    string performSemanticAnalysis(SymbolTable& symbolTable) override {
+        std::cout << "This is Identifier: " << this->value << std::endl;
+        try {
+            Record symbol = symbolTable.lookup(this->value);
+
+            // If found, you could return its type or just confirm it's valid.
+            if (!symbol.isValid()) {
+                cout << "Semantic Error: Identifier '" << this->value << "' is undeclared." << endl;
+                return "error";
+            }
+            return symbol.getType();
+        } catch (const std::runtime_error& e) {
+            // Handle the exception as an undeclared identifier error.
+            cout << "Semantic Error: Identifier '" << this->value << "' is undeclared." << endl;
+            return "error";
+        }
+    }
+
+    string performSemanticAnalysisFromRoot(SymbolTable& symbolTable) override {
+        std::cout << "This is Identifier: " << this->value << std::endl;
+        try {
+            Record symbol = symbolTable.lookup(this->value);
+
+            // If found, you could return its type or just confirm it's valid.
+            if (!symbol.isValid()) {
+                cout << "Semantic Error: Identifier '" << this->value << "' is undeclared." << endl;
+                return "error";
+            }
+            return symbol.getType();
+        } catch (const std::runtime_error& e) {
+            // Handle the exception as an undeclared identifier error.
+            cout << "Semantic Error: Identifier '" << this->value << "' is undeclared." << endl;
+            return "error";
+        }
+    }
+};
+
+class Index : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            rhsType = children[1]->performSemanticAnalysis(symbolTable);
+            if(lhsType != "int[]"){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            if(rhsType != "int"){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "int";
+        }
+};
+
+class IntArray : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            if(lhsType != "int"){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "int[]";
+        }
+
+};
+
+class BooleanFactor : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            return "boolean";
+            // lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            // if(lhsType != "boolean"){
+            //     std::cout << "Types are not the same" << std::endl;
+            // }
+            // return "boolean";
+        }
+};
+
+class IntFactor : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            return "int";
+            // lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            // if(lhsType != "int"){
+            //     std::cout << "Types are not the same" << std::endl;
+            // }
+            // return "int";
+        }
+};
+
+class ClassFactor : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            // lhsType = children[0]->performSemanticAnalysis(symbolTable);
+            // if(lhsType != "Class"){
+            //     std::cout << "Types are not the same" << std::endl;
+            // }
+            // return "Class";
+            auto temp = symbolTable.lookup("this");
+            return temp.getType();
+        }
+};
+
+class Return : public Node{
+    // I want the return type to be the same as the method type
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            std::string returnType = children[0]->performSemanticAnalysis(symbolTable);
+            std::string methodType = symbolTable.getCurrentScope()->getType();
+
+            std::cout << returnType << " is the return type" << std::endl;
+            std::cout << methodType << " is the method type" << std::endl;
+            if(returnType != methodType){
+                std::cout << "Types are not the same" << std::endl;
+            }
+            return "";
+        }
+};
+
+// class MethodCall : public Node{
+//     public:
+//         using Node::Node;
+
 // };
+
+class Arguments : public Node{
+    private:
+        std::vector<std::string> argumentTypes;
+    public:
+        using Node::Node;
+        std::vector<std::string> getArguments(SymbolTable& symbolTable){
+			for(unsigned int i = 0; i < children.size(); i++){
+				lhsType = children[i]->performSemanticAnalysis(symbolTable);
+				argumentTypes.push_back(lhsType);
+			}
+
+			return argumentTypes;
+		}
+};
+
+class IfElseWhile : public Node{
+    public:
+        using Node::Node;
+        string performSemanticAnalysis(SymbolTable& symbolTable) override {
+            std::string returnType = children[0]->performSemanticAnalysis(symbolTable);
+            if(returnType != "boolean"){
+                std::cout << "Type must be Bool " << std::endl;
+            }
+			for(unsigned int i = 1; i < children.size(); i++){
+				children[i]->performSemanticAnalysis(symbolTable);
+			}
+            return "";
+        }
+};
+
+class Assignment : public Node {
+public:
+    using Node::Node;
+    string performSemanticAnalysis(SymbolTable& symbolTable) override {
+        // First, ensure the LHS identifier exists in the symbol table.
+        std::string lhsIdentifier = children[0]->value; // Assuming the LHS child is an Identifier node.
+        Record lhsRecord;
+
+        try {
+            lhsRecord = symbolTable.lookup(lhsIdentifier);
+        } catch (const std::runtime_error& e) {
+            std::cout << "Semantic Error: Variable '" << lhsIdentifier << "' is undeclared." << std::endl;
+            return "error";
+        }
+
+        // If the LHS record is invalid, it means the identifier was not declared.
+        if (!lhsRecord.isValid()) {
+            std::cout << "Semantic Error: Variable '" << lhsIdentifier << "' is undeclared." << std::endl;
+            return "error";
+        }
+
+        // Perform semantic analysis on both LHS and RHS to determine their types.
+        lhsType = children[0]->performSemanticAnalysis(symbolTable);
+        rhsType = children[1]->performSemanticAnalysis(symbolTable);
+
+        // Ensure the types match.
+        if (lhsType != rhsType) {
+            std::cout << "Type Error: Cannot assign " << rhsType << " to " << lhsType << "." << std::endl;
+            return "error";
+        }
+
+        // If everything checks out, return a successful result (empty string or specific success code).
+        return "";
+    }
+};
+
 
 
 

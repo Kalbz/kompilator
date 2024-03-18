@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 			
 			root->execute(symbolTable);
 			symbolTable.generateGraphviz("symbol_table.dot");
-			
+			root->performSemanticAnalysis(symbolTable);
 
 			// astTraversal(symbolTable, root);
 			std::cout << "Symbol Table: " << std::endl;
