@@ -32,6 +32,12 @@ public:
         this->parameters.insert(std::pair<std::string, Variable>(name, v));
     }
 
+    std::map<std::string, Variable> getParameter()
+    {
+        return this->parameters;
+    }
+
+
     void printMethod()
     {
         std::cout << "Method: " << this->getId() << " Type: " << this->getType() << std::endl;

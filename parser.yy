@@ -363,10 +363,12 @@ expression: expression PLUSOP expression {      /*
                             $$->children.push_back($1);
             }
 
-            | expression DOT ExtendedFunc {
+            | expression DOT identifier ExtendedFunc {
                             $$ = new Node("Method Invocation", "", yylineno);
                             $$->children.push_back($1);
                             $$->children.push_back($3);
+                            $$->children.push_back($4);
+
             }
             | NEW INT_KEYWORD Index {
                             $$ = new IntArray("New Int", "", yylineno);
@@ -384,14 +386,11 @@ expression: expression PLUSOP expression {      /*
             | VarDeclaration {$$ = $1;}
             ;
 
-ExtendedFunc: identifier LP RP {
-                            $$ = new Node(".function", "", yylineno);
-                            $$->children.push_back($1);
+ExtendedFunc: LP RP {
+                            $$ = new Node("ExtendedFunction", "", yylineno);
                   }
-                  | identifier LP Argumentlist RP{
-                            $$ = new Node(".function", "", yylineno);
-                            $$->children.push_back($1);
-                            $$->children.push_back($3);
+                  |  LP Argumentlist RP{
+                            $$ = $2;
                   }
     ;
 

@@ -15,6 +15,8 @@ private:
     Scope *parentScope = nullptr;
     std::vector<Scope *> childScopes;
     std::map<std::string, Record*> records;
+    Method* currentMethod = nullptr;
+
     int next = 0;
 
 public:
@@ -68,6 +70,7 @@ public:
     }
 
 
+
     Record lookup(std::string key){
         auto it = records.find(key);
         if (it != records.end())
@@ -87,9 +90,42 @@ public:
         }
     }
 
+    Record lookupCurrentScope(std::string key){
+        auto it = records.find(key);
+        if (it != records.end())
+        {
+            return *it->second;
+        }
+        else
+        {
+            throw std::runtime_error("Record not found");
+        }
+    }
+
+    Scope* findNearestClassScope() {
+        Scope* scope = this;
+        while (scope != nullptr && scope->getType() != "Class") {
+            scope = scope->getParentScope();
+        }
+        return scope;
+    }
+
+    Scope* findNearestMethodScope() {
+        Scope* scope = this;
+        while (scope != nullptr && scope->getType() != "Method") {
+            scope = scope->getParentScope();
+        }
+        return scope;
+    }
+
+
+
     Scope* getParentScope(){
         return parentScope;
     }
+    
+
+
 
     void resetScope(){
         next = 0;
@@ -125,6 +161,14 @@ public:
         }
     }
 
+    // Ensure there's a way to set and get this currentMethod, either directly or through methods
+    void setCurrentMethod(Method* method) {
+        this->currentMethod = method;
+    }
+
+    Method* getCurrentMethod() const {
+        return this->currentMethod;
+    }
 
 
 void generateDotContent(std::ostream &out, int &nodeCount) const {

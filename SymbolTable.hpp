@@ -55,6 +55,19 @@ public:
         return current->lookup(key);
     }
 
+
+    Record lookupParent(std::string key){
+        return current->getParentScope()->lookup(key);
+    }
+
+    Record lookupCurrentScope(std::string key){
+        return current->lookupCurrentScope(key);
+    }
+
+    Record lookupRoot(std::string key){
+        return root.lookupCurrentScope(key);
+    }
+
     void printTable(){
         root.printScope();
     }

@@ -171,6 +171,10 @@ public:
             Method method(methodIdentifier, methodType);
             symbolTable.put(methodIdentifier, method);
 
+            Method* newMethod = new Method(methodIdentifier, methodType);
+            // Assuming your symbol table or scope can manage Method* lifetime properly:
+            symbolTable.getCurrentScope()->setCurrentMethod(newMethod);
+
             children[2]->execute(symbolTable);
             if (children.size() == 4)
             {
@@ -253,10 +257,38 @@ public:
             std::cout << "Parameter encountered: Identifier=" << varIdentifier << ", Type=" << varType << std::endl;
             Variable var(varIdentifier, varType);
             symbolTable.put(varIdentifier, var);
-        }
-        return result;
+
+            
+            Scope* classScope = symbolTable.getCurrentScope()->findNearestClassScope();
+                if (classScope != nullptr) {
+                    std::cout << "Current class scope: " << classScope->getName() << std::endl;
+                    
+
+
+                } else {
+                    std::cout << "Parameter not within a class scope." << std::endl;
+                }
+
+        // Find the current method scope
+                Scope* methodScope = symbolTable.getCurrentScope()->findNearestMethodScope();
+                if (methodScope != nullptr) {
+                    Method* currentMethod = methodScope->getCurrentMethod();
+                    if (currentMethod != nullptr) {
+                        // Add the parameter to the method
+                        currentMethod->addParameter(varIdentifier, varType);
+                        std::cout << "executed" << std::endl;
+                    } else {
+                        std::cout << "No current method in scope." << std::endl;
+                    }
+                } else {
+                    std::cout << "Parameter not within a method scope." << std::endl;
+                }
+            }
+            return result;
     }
 };
+
+
 
 class IntExpression : public Node{
 
@@ -512,7 +544,21 @@ class Return : public Node{
 // class MethodCall : public Node{
 //     public:
 //         using Node::Node;
-
+//         string performSemanticAnalysis(SymbolTable& symbolTable) override {
+//             std::string returnType = children[0]->performSemanticAnalysis(symbolTable);
+//             std::string methodType = symbolTable.lookup(returnType).getType();
+//             std::vector<std::string> arguments = children[1]->getArgument(symbolTable);
+//             std::vector<std::string> parameters = symbolTable.lookup(returnType).getParameters(symbolTable);
+//             if(arguments.size() != parameters.size()){
+//                 std::cout << "Number of arguments does not match number of parameters" << std::endl;
+//             }
+//             for(unsigned int i = 0; i < arguments.size(); i++){
+//                 if(arguments[i] != parameters[i]){
+//                     std::cout << "Types are not the same" << std::endl;
+//                 }
+//             }
+//             return methodType;
+//         }
 // };
 
 class Arguments : public Node{
